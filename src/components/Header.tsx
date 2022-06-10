@@ -18,6 +18,10 @@ export function Header() {
                     fontWeight="bold"
                     letterSpacing="tight"
                     w="64"
+                    _hover={{
+                         cursor: "pointer"
+                    }}
+                    onClick={() => document.body.classList.toggle('active')}
                >
                     dashgo
                     <Text
