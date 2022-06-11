@@ -1,6 +1,4 @@
-*{
-     transition: all 0.4s 0.4s ease;
-}
+
 body::before{
      content: "";
      width: 10vw;
@@ -18,7 +16,7 @@ body::before{
 }
 
 body.active::before{
-     transform: scale(25);
+     transform: scale(70);
 }
 
 body .box{
@@ -27,6 +25,7 @@ body .box{
      height: 100%;
      overflow: hidden;
      z-index: 1;
+     transition: all 0.4s 0.4s ease-in;
 }
 
 body .box::before{
@@ -45,7 +44,7 @@ body .box::before{
 
 body.active .box::before {
      content: "";
-     transform: scale(20);
+     transform: scale(70);
   
 }
 

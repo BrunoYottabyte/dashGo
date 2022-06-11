@@ -1,7 +1,11 @@
 import { Flex, Input, Icon } from "@chakra-ui/react";
+
+
 import { RiSearchLine } from "react-icons/ri";
 
 export function Search (){
+    
+
     return(
         <Flex
             as="label"
@@ -26,6 +30,7 @@ export function Search (){
                   color:
                        'gray.400'
              }}
+    
         />
         <Icon as={RiSearchLine} fontSize="20" />
    </Flex>

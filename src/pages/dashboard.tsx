@@ -68,12 +68,14 @@ const series = [
 
 export default function Dashboard() {
 
-     // useEffect(() => {
-     //      document.body.classList.add('active')
-     // }, [])
 
      return (
-          <Flex direction="column" className="bg_global" height="100vh">
+      <Flex
+            direction="column"
+            className="bg_global"
+            height="100vh"
+          
+          >
                <Head>
                     <title>Dashboard</title>
                </Head>
@@ -89,12 +91,12 @@ export default function Dashboard() {
                     <Sidebar />
 
                     <SimpleGrid flex="1" gap="4" minChildWidth="320px" align="flex-start">
-                         <Box p="8" className="box" bg="gray.800" borderRadius="8" paddingBottom={2}>
+                         <Box p={["6","8"]} className="box" bg="gray.800" borderRadius="8" paddingBottom={2}>
                               <Text>Inscritos da semana</Text>
                               <Chart options={options} series={series} type="area" height={160} />
                          </Box>
 
-                         <Box p="8" className="box" bg="gray.800" borderRadius="8" paddingBottom={2}>
+                         <Box p={["6","8"]} className="box" bg="gray.800" borderRadius="8" paddingBottom={2}>
                               <Text>Taxa de abertura</Text>
                               <Chart options={options} series={series} type="area" height={160} />
                          </Box>
