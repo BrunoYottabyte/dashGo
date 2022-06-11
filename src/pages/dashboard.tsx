@@ -73,7 +73,7 @@ export default function Dashboard() {
      // }, [])
 
      return (
-          <Flex direction="column" className="bg_global " height="100vh">
+          <Flex direction="column" className="bg_global" height="100vh">
                <Head>
                     <title>Dashboard</title>
                </Head>
