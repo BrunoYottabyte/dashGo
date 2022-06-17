@@ -4,21 +4,22 @@ import { theme } from '../styles/theme'
 import "../styles/global.css";
 import { SidebarDrawerProvider } from '../contexts/SidebarDrawerContext';
 import { makeServer } from '../services/mirage';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { queryClient } from '../services/mirage/queryClient';
 
-if(process.env.NODE_ENV === 'development'){
+
+if (process.env.NODE_ENV === 'development') {
   makeServer();
 }
 
-const queryClient = new QueryClient;
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider resetCSS theme={theme}>
         <SidebarDrawerProvider>
-            <Component {...pageProps} />
+          <Component {...pageProps} />
         </SidebarDrawerProvider>
       </ChakraProvider>
       <ReactQueryDevtools />
