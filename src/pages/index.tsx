@@ -1,36 +1,29 @@
 import { Flex, FormLabel, FormControl, Button, Stack } from '@chakra-ui/react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { Input } from '../components/Form/Input';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Input } from '../components/Form/Input';
-import { useRouter } from 'next/router';
 
 
-type signInFormData = {
+type SignInFormData = {
   email: string;
-  passoword: string;
+  password: string;
 }
 
 const signInFormSchema = yup.object().shape({
-  email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
-  password: yup.string().required('Senha obrigatória').min(4,'A senha precisa ter no min 4 caracteres'),
+  email: yup.string().required("E-mail obrigatório").email(),
+  password: yup.string().required("Senha obrigatória")
 })
 
 export default function SignIn() {
-  const router = useRouter();
-  const {register, handleSubmit, formState} = useForm({
+  const { formState, handleSubmit, register } = useForm({
     resolver: yupResolver(signInFormSchema)
   });
-    const {errors} = formState;
-    const handleSignIn: SubmitHandler<signInFormData> = async (values, event) => {
-      
-      await new Promise(resolve => setTimeout(() => {
-       router.push('/dashboard');
-      }, 1500))
-      
-      console.log(values);
-
-    }
+  const { errors } = formState;
+  const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    console.log(values)
+  }
 
   return (
     <Flex
@@ -39,7 +32,7 @@ export default function SignIn() {
       align="center"
       justify="center"
     >
-      
+
       <Flex
         as="form"
         width="100%"
@@ -58,13 +51,13 @@ export default function SignIn() {
             {...register('email')}
             error={errors.email}
           />
-        <Input
+          <Input
             id='password'
             type="password"
             name='password'
+            error={errors.password}
             label='Senha'
             {...register('password')}
-            error={errors.password}
           />
         </Stack>
 

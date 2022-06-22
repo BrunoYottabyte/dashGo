@@ -2,29 +2,13 @@ import { Box, Flex, Heading, Button, Icon, Table, Thead, Tr, Th, Checkbox, Tbody
 import Head from "next/head";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
-import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
 import NextLink from "next/link";
 
-import { useUsers } from "../../services/hooks/useUsers";
-import { useState } from "react";
-import { queryClient } from "../../services/mirage/queryClient";
 import { api } from "../../services/api";
+import { Pagination } from "../../components/Pagination";
 
 export default function UserList() {
-     const [page, setPage] = useState(1);
-
-     const { data, isLoading, error, isFetching } = useUsers(page);
-
-     async function handlePrefetchUser(userId: number) {
-          await queryClient.prefetchQuery(['user', userId], async () => {
-               const response = await api.get(`users/${userId}`);
-
-               return response.data;
-          }, {
-               staleTime: 1000 * 60 * 10 // 10 minutes
-          })
-     }
 
      return (
           <Box>
@@ -44,7 +28,8 @@ export default function UserList() {
                     <Box flex="1" borderRadius="8" bg="gray.800" p={["6", "8"]} overflowX={["scroll", "scroll", "auto"]}>
                          <Flex mb="8" justify="space-between" align="center" >
                               <Heading size="lg" fontWeight="normal">
-                                   Usuários {!isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" />}
+
+                                   Usuários
                               </Heading>
 
                               <NextLink href="/users/create" passHref>
@@ -60,68 +45,52 @@ export default function UserList() {
                               </NextLink>
                          </Flex>
 
-                         {isLoading ? (
-                              <Flex align="center" justify="center">
-                                   <Spinner />
-                              </Flex>
-                         ) : error ? (
-                              <Flex justify="center">
-                                   <Text>Falha ao obter dados dos usuários.</Text>
-                              </Flex>
-                         ) : (
-                              <>
-                                   <Table colorScheme="whiteAlpha">
-                                        <Thead>
-                                             <Tr>
-                                                  <Th px={["4", "4", "6"]} color="gray.300" width="8" >
-                                                       <Checkbox colorScheme="pink" />
-                                                  </Th>
-                                                  <Th>Usuário</Th>
-                                                  <Th>Data de Cadastro</Th>
-                                                  <Th w="8" />
-                                             </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                             {data.users.map(user => {
-                                                  return (
-                                                       <Tr key={user.id}>
-                                                            <Td px={["4", "4", "6"]}>
-                                                                 <Checkbox colorScheme="pink" />
-                                                            </Td>
 
-                                                            <Td>
-                                                                 <Box>
-                                                                      <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(user.id)}>
-                                                                           <Text fontWeight="bold" >{user.name}</Text>
-                                                                      </Link>
-                                                                      <Text color="gray.300" fontSize="small" >{user.email}</Text>
+                         <Table colorScheme="whiteAlpha">
+                              <Thead>
+                                   <Tr>
+                                        <Th px={["4", "4", "6"]} color="gray.300" width="8" >
+                                             <Checkbox colorScheme="pink" />
+                                        </Th>
+                                        <Th>Usuário</Th>
+                                        <Th>Data de Cadastro</Th>
+                                        <Th w="8" />
+                                   </Tr>
+                              </Thead>
+                              <Tbody>
 
-                                                                 </Box>
-                                                            </Td>
-                                                            <Td>{user.created_at}</Td>
-                                                            <Td>
-                                                                 <Button
-                                                                      as="a"
-                                                                      size="sm"
-                                                                      fontSize="sm"
-                                                                      colorScheme="purple"
-                                                                      leftIcon={<Icon as={RiPencilLine} />}
-                                                                 >
-                                                                      Editar
-                                                                 </Button>
-                                                            </Td>
-                                                       </Tr>
-                                                  )
-                                             })}
-                                        </Tbody>
-                                   </Table>
-                                   <Pagination
-                                        totalCountOfRegisters={data.totalCount}
-                                        currentPage={page}
-                                        onPageChange={setPage}
-                                   />
-                              </>
-                         )}
+
+                                   <Tr >
+                                        <Td px={["4", "4", "6"]}>
+                                             <Checkbox colorScheme="pink" />
+                                        </Td>
+
+                                        <Td>
+                                             <Box>
+                                                  <Link color="purple.400">
+                                                       <Text fontWeight="bold" >Bruno Siqueira</Text>
+                                                  </Link>
+                                                  <Text color="gray.300" fontSize="small" >PROJETOINTEGRADOR792@GMAIL.COM</Text>
+
+                                             </Box>
+                                        </Td>
+                                        <Td>22 de junho, 2022</Td>
+                                        <Td>
+                                             <Button
+                                                  as="a"
+                                                  size="sm"
+                                                  fontSize="sm"
+                                                  colorScheme="purple"
+                                                  leftIcon={<Icon as={RiPencilLine} />}
+                                             >
+                                                  Editar
+                                             </Button>
+                                        </Td>
+                                   </Tr>
+                              </Tbody>
+                         </Table>
+                         <Pagination />
+
                     </Box>
                </Flex>
           </Box>
