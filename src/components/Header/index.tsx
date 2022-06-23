@@ -1,16 +1,15 @@
-import { Flex, Icon, IconButton, useBreakpointValue, useColorMode } from '@chakra-ui/react';
+import { Flex, Icon, IconButton, useBreakpointValue } from '@chakra-ui/react';
 import { RiMenuLine } from 'react-icons/ri';
 import { useSidebarDrawer } from '../../contexts/SidebarDrawerContext';
 import { Logo } from './Logo';
 import { NotificationsNav } from './NotificationsNav';
 import { Profile } from './Profile';
 import { Search } from './Search';
-import { StyleConfig } from "@chakra-ui/theme-tools";
+
 
 
 export function Header() {
-     const { toggleColorMode, colorMode } = useColorMode()
-     console.log(colorMode);
+  
      const { onOpen } = useSidebarDrawer();
 
      const isWideVersion = useBreakpointValue({
@@ -44,7 +43,7 @@ export function Header() {
                <Flex
                     align="center"
                     ml="auto"
-                    onClick={toggleColorMode}
+       
                >
                     <NotificationsNav />
 

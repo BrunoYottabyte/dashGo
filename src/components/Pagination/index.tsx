@@ -3,12 +3,34 @@ import { PaginationItem } from "./PaginationItem";
 
 
 interface PaginationProps {
+    totalCountOfRegisters: number;
     registerPerPage?: number;
     currentPage?: number;
+    onPageChange: (page: number) => void;
 }
 
+const siblingsCount = 1;
 
-export function Pagination({ currentPage = 1, registerPerPage = 10 }: PaginationProps) {
+function generatePagesArray(from: number, to: number) {
+    return [...new Array(to - from)].map((_, index) => {
+        return from + index + 1
+    })
+        .filter(page => page > 0);
+}
+
+console.log(generatePagesArray(3, 4))
+
+export function Pagination({ currentPage = 1, registerPerPage = 10, totalCountOfRegisters, onPageChange }: PaginationProps) {
+
+    const lastPage = Math.floor(totalCountOfRegisters / registerPerPage);
+
+    const previousPages = currentPage > 1
+        ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
+        : []
+
+    const nextPages = currentPage < lastPage
+        ? generatePagesArray(currentPage, Math.min(currentPage + siblingsCount, lastPage))
+        : []
 
     return (
         <Stack direction={["column", "row"]} mt="8" justify="space-between" align="center">
@@ -17,12 +39,32 @@ export function Pagination({ currentPage = 1, registerPerPage = 10 }: Pagination
             </Box>
             <Stack direction="row" spacing={2}>
 
-                <PaginationItem number={1} isCurrent />
-                <PaginationItem number={2} />
-                <PaginationItem number={3} />
-                <PaginationItem number={4} />
-                <PaginationItem number={5} />
+                {currentPage > (1 + siblingsCount) && (
+                    <>
+                        <PaginationItem number={1} onPageChange={onPageChange} />
+                        {currentPage > (2 + siblingsCount) && <Text color="gray.300" width="8" textAlign="center">...</Text>}
+                    </>
+                )}
 
+                {previousPages.length > 0 && previousPages.map((page) => {
+                    return (
+                        <PaginationItem number={page} onPageChange={onPageChange} key={page} />
+                    )
+                })}
+                <PaginationItem number={currentPage} isCurrent onPageChange={onPageChange} />
+
+                {nextPages.length > 0 && nextPages.map((page) => {
+                    return (
+                        <PaginationItem number={page} onPageChange={onPageChange} key={page} />
+                    )
+                })}
+
+                {(currentPage + siblingsCount) < lastPage && (
+                    <>
+                         {(currentPage + 1 + siblingsCount) < lastPage && <Text color="gray.300" width="8" textAlign="center">...</Text>}
+                         <PaginationItem number={lastPage} onPageChange={onPageChange} />
+                    </>
+                )}
 
 
             </Stack>
