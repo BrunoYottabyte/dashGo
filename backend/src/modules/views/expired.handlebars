@@ -1,0 +1,156 @@
+<html lang='pt'>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='device-width-device, initial-scale=1.0' />
+    <title>Expired</title>
+
+    <style>
+      .container-email{ width: 100%; background-color: #07021e; text-align:
+      center; color: #fff;} table {width: 100%; margin: 15px 0;
+      background-color: #07021e; } th, td { padding: 5px 20px; border: 1px solid
+      #999; color: #fff; background-color: rgba(153, 153, 153, 0.507); text-align: center;} th {
+      background: rgb(0, 0, 0); font-weight: bold; font-size: 1.05rem; }
+      tr:nth-child(odd) { background: #eee; } .image{ width: 70%; margin: 0
+      auto; } h1{background-color: #07021e; margin: 0; width: 100%; } img{
+      width: 25%; object-fit: contain; }
+      .warning{ background-color: rgb(247,247, 3); color: #000; }
+      .warning-color{ color: rgba(255, 255, 0, 1); }
+      .red-color{ color: rgba(255, 0, 0, 1); } .red{ background-color: red; }
+      .creditos{ margin: 0; } .back{ background-color: #07021e !important;}
+    </style>
+
+  </head>
+
+  <body>
+    <div class='containerGeral'>
+
+      <div class='container-email'>
+        <div class='image'>
+          <img src='cid:logo' height='200' />
+        </div>
+
+        {{#each expiredTraining}}
+          {{#if this.expired}}
+          {{#ifCond this.expired '>' 0}}
+            <tr>
+              <td
+                style='font-size: 5px; line-height: 20px; mso-line-height-rule: exactly;'
+              >&nbsp;</td>
+            </tr>
+            <h1 class='red-color' style='color: red'>List of
+              expired trainings</h1>
+            <tr>
+              <td
+                style='font-size: 5px; line-height: 25px; mso-line-height-rule: exactly;'
+              >&nbsp;</td>
+            </tr>
+          {{/ifCond}}
+
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Training</th>
+                <th>Occupation</th>
+                <th>Expiration date</th>
+                <th class='red'>Expired days</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              {{#each this.expired}}
+                <tr>
+                  <td>{{this.name}}</td>
+                  {{!  }}
+                  <td>
+                    <div>{{this.training}}</div>
+                  </td>
+                  <td>
+                    <div>{{this.occupation}}</div>
+                  </td>
+                  <td>
+                    <div>{{this.dataVencimento}}</div>
+                  </td>
+                  <td>
+                    <div>{{this.expiresIn}}</div>
+                  </td>
+                </tr>
+              {{/each}}
+
+            </tbody>
+          </table>
+            {{/if}}
+          {{! A VENCER }}
+          {{#if this.closeToExpiring}}
+          {{#ifCond this.closeToExpiring '>' 0}}
+          <td
+                style='font-size: 5px; line-height: 25px; mso-line-height-rule: exactly;'
+              >&nbsp;</td>
+            </tr>
+            <h1 class='warning-color' style='color: yellow;'>List
+              of trainings close to expiring</h1>
+              <td
+                style='font-size: 5px; line-height: 25px; mso-line-height-rule: exactly;'
+              >&nbsp;</td>
+            </tr>
+          {{/ifCond}}
+
+
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Training</th>
+                <th>Occupation</th>
+                <th>Expiration date</th>
+                <th
+
+                  style='background-color: yellow'
+                  class='warning'
+                >Days to expire</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              {{#each this.closeToExpiring}}
+                <tr>
+
+                  <td>{{this.name}}</td>
+                  <td>
+                    <div>{{this.training}}</div>
+                  </td>
+                  <td>
+                    <div>{{this.occupation}}</div>
+                  </td>
+                  <td>
+                    <div>{{this.dataVencimento}}</div>
+                  </td>
+                  <td>
+                    <div>{{this.expiresIn}}</div>
+                  </td>
+                </tr>
+              {{/each}}
+
+            </tbody>
+
+          </table>
+            {{/if}}
+
+        {{/each}}
+         <tr>
+              <td
+                style='font-size: 5px; line-height: 20px; mso-line-height-rule: exactly;'
+              >&nbsp;</td>
+        </tr>
+        <p class='creditos'>Desenvolvido por
+          <strong>Bruno dos Santos</strong>
+        </p>
+         <tr>
+              <td
+                style='font-size: 5px; line-height: 20px; mso-line-height-rule: exactly;'
+              >&nbsp;</td>
+            </tr>
+      </div>
+    </div>
+  </body>
+</html>
