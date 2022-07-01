@@ -3,21 +3,25 @@ const authConfig = require('../config/auth.json')
 
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
+
     if(!authHeader)
-        return res.status(401).send({error: 'No token provided'});
+        return res.status(401).json({error: true, code:'token.invalid', message: 'Token not present'});
     
     //Bearer hash loucobsijcjsa
 
-    const parts = authHeader.split(' ');
-    if(!parts.length === 2) return res.status(401).send({error: 'Token error'});
-    
-    const [scheme, token] = parts;
+    const [scheme, token] = authHeader.split(' ');
+
+    if (!token) {
+        return response 
+          .status(401)
+          .json({ error: true, code: 'token.invalid', message: 'Token not present.' })
+    }
 
     if(!/^Bearer$/i.test(scheme))
-        return res.status(401).send({ error: 'Token malformatted'});
+        return res.status(401).json({ error: true, code: 'token.invalid', message:'Token malformatted'});
 
     jwt.verify(token, authConfig.secret, (err, decoded) => {
-        if(err) return res.status(401).send({error: 'Token invalid'});
+        if(err) return res.status(401).json({error:true, code: 'token.expired', message:'Token invalid'});
         req.userId = decoded.id;
         return next();
     })

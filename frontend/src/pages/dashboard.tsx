@@ -75,10 +75,10 @@ export default function Dashboard() {
      useEffect(() => {
           api.get('/registro').then(response => {
                console.log(response)
-          }).catch(err => {
-               console.log(err.response.data);
-          })
+          }).catch(err => console.log(err))
      }, [])
+
+     
 
      return (
       <Flex

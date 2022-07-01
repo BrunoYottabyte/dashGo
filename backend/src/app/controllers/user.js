@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth.json');
 const mailer = require('../../modules/mailer');
 const {v4 : uuid} = require('uuid');
+const refeshAuth = require('../middlewares/refreshAuth');
 
 //forgot method
 const crypto = require('crypto');
@@ -20,7 +21,7 @@ const createRefreshToken = (email) => {
 const generateJwtAndRefreshToken = async(email, payload = {}) =>{
   const token = jwt.sign(payload, authConfig.secret, {
     subject: email,
-    expiresIn: 60 * 15 // 15 min
+    expiresIn: 10 //60 * 15 // 15 min
   })
 
   const refreshToken = createRefreshToken(email);
@@ -136,6 +137,42 @@ router.post('/', async (req, res) => {
     return res.json({ error: true, message: 'Registration failed' });
   }
 });
+
+router.post('/refresh', refeshAuth, async (req, res) => {
+  const email = req.user;
+  const {refreshToken} = req.body;
+
+  // console.log()
+  
+  const user = await User.findOne({email});
+
+  if(!user){
+    return res.status(401).json({error: true, message: 'User not found'});
+  }
+
+  if(!refreshToken){
+    return res.status(401).json({error: true, message: 'Refresh token is required.'});
+  }
+
+  isValidRefreshToken = user.refreshToken === refreshToken;
+  
+  if(!isValidRefreshToken){
+    return res.status(401).json({error: true, message: 'Refresh token is invalid.'})
+  }
+
+  const {token, refreshToken: newRefreshToken} = await generateJwtAndRefreshToken(email, {
+    permissions: user.permissions,
+    roles: user.roles
+  })
+
+  return res.json({
+    token,
+    refreshToken: newRefreshToken,
+    permissions: user.permissions,
+    roles: user.roles
+  })
+
+})
 
 router.post('/verifyEmail', async (req, res) => {
   const { code, user } = req.body;
