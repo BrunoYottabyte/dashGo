@@ -3,7 +3,7 @@ import { withSSRAuth } from "../utils/withSSRAuth"
 
 export default function Metrics(){
     return(
-        <h1>Metrics</h1>
+        <h1>Metricsqwdqwd</h1>
     )
 }
 
