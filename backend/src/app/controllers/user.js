@@ -7,11 +7,11 @@ const authConfig = require('../config/auth.json');
 const mailer = require('../../modules/mailer');
 const {v4 : uuid} = require('uuid');
 const refeshAuth = require('../middlewares/refreshAuth');
+const checkAuthUser = require('../middlewares/auth')
 
 //forgot method
 const crypto = require('crypto');
 const path = require('path');
-
 
 const createRefreshToken = (email) => {
   const refreshToken = uuid();
@@ -21,14 +21,12 @@ const createRefreshToken = (email) => {
 const generateJwtAndRefreshToken = async(email, payload = {}) =>{
   const token = jwt.sign(payload, authConfig.secret, {
     subject: email,
-    expiresIn: 10 //60 * 15 // 15 min
+    expiresIn: 60 * 15 // 15 min
   })
 
   const refreshToken = createRefreshToken(email);
   await User.findOneAndUpdate({email}, {
-    
       refreshToken
-    
   })
   return {
     token, 
@@ -137,6 +135,24 @@ router.post('/', async (req, res) => {
     return res.json({ error: true, message: 'Registration failed' });
   }
 });
+
+router.get('/me', checkAuthUser ,async(req, res) =>{
+    const email = req.user;
+    const user = await User.findOne({email}).select('permissions roles');
+
+    if(!user){
+      return res
+              .status(401)
+                .json({error: true, message: 'User not found.'})
+    }
+
+    return res.json({
+      email,
+      permissions: user.permissions,
+      roles: user.roles
+    })
+
+})
 
 router.post('/refresh', refeshAuth, async (req, res) => {
   const email = req.user;

@@ -8,7 +8,8 @@ import { Pagination } from "../../components/Pagination";
 import { useUsers } from "../../services/hooks/useUsers";
 import { useState } from "react";
 import { queryClient } from "../../services/queryClient";
-import { api } from "../../services/api";
+import { api, setupClientApi } from "../../services/api";
+import { withSSRAuth } from "../../utils/withSSRAuth";
 
 
 
@@ -134,3 +135,13 @@ export default function UserList() {
           </Box>
      )
 }
+
+export const getServerSideProps = withSSRAuth(async(ctx) => {
+     const apiSSR = setupClientApi(ctx);
+     const response = await apiSSR.get('/user/me');
+
+          return {
+               props: {
+               }
+          }
+})

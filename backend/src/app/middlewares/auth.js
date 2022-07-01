@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
 
     jwt.verify(token, authConfig.secret, (err, decoded) => {
         if(err) return res.status(401).json({error:true, code: 'token.expired', message:'Token invalid'});
-        req.userId = decoded.id;
+        req.user = decoded.sub;
         return next();
     })
 }

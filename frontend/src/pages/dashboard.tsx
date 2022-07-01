@@ -5,7 +5,11 @@ import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect } from "react";
-import { api } from "../services/api";
+import { api, setupClientApi } from "../services/api";
+import { GetServerSideProps } from "next";
+import { withSSRAuth } from "../utils/withSSRAuth";
+import { Can } from "../components/Can";
+
 
 
 
@@ -71,15 +75,6 @@ const series = [
 
 export default function Dashboard() {
      const {user} = useAuth()
-
-     useEffect(() => {
-          api.get('/registro').then(response => {
-               console.log(response)
-          }).catch(err => console.log(err))
-     }, [])
-
-     
-
      return (
       <Flex
             direction="column"
@@ -106,16 +101,26 @@ export default function Dashboard() {
                               <Chart options={options} series={series} type="area" height={160} />
                          </Box>
 
-                         <Box p={["6","8"]} className="box" bg="gray.800" borderRadius="8" paddingBottom={2}>
-                              <Text>Taxa de abertura</Text>
-                              <Chart options={options} series={series} type="area" height={160} />
-                         </Box>
-
+                         <Can permissions={['metrics.list', ]} roles={['administrator']}>
+                              <Box p={["6","8"]} className="box" bg="gray.800" borderRadius="8" paddingBottom={2}>
+                                   <Text>Taxa de abertura</Text>
+                                   <Chart options={options} series={series} type="area" height={160} />
+                              </Box>
+                         </Can>
 
                     </SimpleGrid>
-                    {user?.email && <h1>Email do usuário: {user.email}</h1>}
-
                </Flex>
           </Flex >
      )
 }
+
+export const getServerSideProps = withSSRAuth(async(ctx) => {
+     const apiSSR = setupClientApi(ctx);
+     const response = await apiSSR.get('/user/me')
+
+          return {
+               props: {
+               }
+          }
+})
+
