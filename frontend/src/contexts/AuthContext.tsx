@@ -2,6 +2,7 @@ import Router from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { api } from "../services/api";
+import { useToast } from "./ToastContext";
 
 type User = {
     email: string;
@@ -56,6 +57,8 @@ export function AuthProvider({ children }: AuthProviderParams) {
     const [verifiedEmail,setVerifiedEmail] = useState(false);
     const isAuthenticated = !user;
 
+    // Toast
+    const {showToast} = useToast();
 
 
     useEffect(() => {
@@ -75,6 +78,7 @@ export function AuthProvider({ children }: AuthProviderParams) {
     }, [])
 
 
+    
     
     useEffect(() => {
         authChannel = new BroadcastChannel('auth');
@@ -96,7 +100,7 @@ export function AuthProvider({ children }: AuthProviderParams) {
 
     async function signIn({ email, password }: SignInCredentials) {
         
-            try{
+            
                 const response = await api.post('/user/authenticate', { email, password });
                 
                 const { permissions, roles, token, refreshToken } = response.data;
@@ -122,21 +126,21 @@ export function AuthProvider({ children }: AuthProviderParams) {
                 Router.push('/dashboard')
 
                 authChannel.postMessage('signIn');
-            
-            }catch(err){
-                console.log(err);
-            }
+                
+           
    
     }
 
     async function signUp({email, fullname, password, username}: SignUpSubscription){
-        try{
             const response = await api.post('/user/', {email, fullname, password, username});
-            setShowVerifyEmail(true);
-        }catch(err){
-            console.log(err);
-            setShowVerifyEmail(false);
-        }
+            console.log(response);
+            if(response.status === 200){
+                setShowVerifyEmail(true);
+            }else{
+                setShowVerifyEmail(false);
+
+            }
+          
     }
 
     async function verifyEmail({code}: VerifyEmailData){

@@ -10,6 +10,8 @@ import { withSSRAuth } from "../../utils/withSSRAuth";
 import { Can } from "../../components/Can";
 
 import styles from './styles.module.scss';
+import { useEffect } from "react";
+import { useToast } from "../../contexts/ToastContext";
 
 
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -75,7 +77,12 @@ const series = [
 ]
 
 export default function Dashboard() {
-    
+     const {showToast} = useToast();
+     useEffect(() => {
+          api.get('/user/me').then(response => {
+               console.log(response)
+          }).catch(err => showToast('danger', err.response?.data.code, err.response?.data.message));
+     }, [])
      return (
           <main className={styles.container}>
                <Head>

@@ -1,4 +1,4 @@
-import { Flex, FormLabel, FormControl, Button, Stack, Spinner } from '@chakra-ui/react';
+import { Alert, Spinner, Tooltip } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -7,15 +7,13 @@ import { withSSRGuest } from '../utils/withSSRGuest';
 import {FaUserAlt} from 'react-icons/fa'
 import {RiLockPasswordFill} from 'react-icons/ri'
 import {MdEmail } from 'react-icons/md'
-import {AiOutlineLoading} from 'react-icons/ai'
-
 import styles from './styles.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
-import { Input } from '../components/Form/Input';
 import { Errors } from '../components/Form/Errors';
-import { EmailVerification } from '../components/Methods_Login/EmailVerification';
-import { Element, Tooltip } from '../components/Tooltip';
+import { EmailVerification } from '../components/LoginMethods/EmailVerification';
+import { Toast } from '../components/Toast';
+import { useToast } from '../contexts/ToastContext';
 
 type SignInFormData = {
   email: string;
@@ -42,7 +40,9 @@ const signUpFormSchema = yup.object().shape({
 })
 
 export default function SignIn() {
-  const { signIn, signUp, verifyEmail, showVerifyEmail } = useAuth()
+  const {showToast} = useToast();
+  const {list} = useToast()
+  const { signIn, signUp, showVerifyEmail } = useAuth()
   const { formState, handleSubmit, register } = useForm(
     {
       resolver: yupResolver(signInFormSchema),
@@ -59,21 +59,33 @@ export default function SignIn() {
   let { errors: errorsUp } = formStateUp;
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
-    
+
+    try{
       await signIn({
         email: values.email,
         password: values.password
       })
+      showToast('success', 'Autenticação realizada :)', 'Estamos te redirecionando');
+    }catch(err){
+      showToast('danger', 'Falha na autenticação', 'Email e/ou senha incorreta.');
+    }
+  
   }
 
   const handleSignUp: SubmitHandler<SignUpFormData> = async({email, fullname, password, username}, event) => {
-    await signUp({
-      email,
-      password,
-      fullname,
-      username
-    })
+    try{
+      await signUp({
+        email,
+        password,
+        fullname,
+        username
+      })
+    }catch(err){
+      showToast('danger', 'Error', err.response?.data.message);
+    }
   }
+
+
 
 
   const signIn_ref = useRef(null);
@@ -99,10 +111,6 @@ export default function SignIn() {
       container_ref.current?.classList.add(styles.signIn)
     }, 500)
   }, [])
-
-  const tooltip_ref = useRef(null)
-
-
   return (
 
     <main className={styles.container} ref={container_ref}>
@@ -111,17 +119,14 @@ export default function SignIn() {
       </Head>
         {/* verification */}
           {showVerifyEmail && <EmailVerification />}
-          {/* <Tooltip ref={tooltip_ref}>
-              <Element />
-              <Element />
-              <Element />
-              
-          </Tooltip> */}
         {/* end verification */}
+        {/* Toast */}
+          <Toast list={list} position="top-right" />
+        {/* End toast */}
         <div className={styles.row}>
           <form className={styles.interface_signUp} ref={signUp_ref} onSubmit={handleSubmitUp(handleSignUp)} >
             <div className={styles.content_signUp}>
-
+   
                 <label>
                   <FaUserAlt />
                   <input type="text" placeholder='Username' {...registerUp('username')} />
