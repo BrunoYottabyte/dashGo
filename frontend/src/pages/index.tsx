@@ -1,88 +1,216 @@
-import { Flex, FormLabel, FormControl, Button, Stack } from '@chakra-ui/react';
+import { Flex, FormLabel, FormControl, Button, Stack, Spinner } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Input } from '../components/Form/Input';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useAuth } from '../contexts/AuthContext';
-import { GetServerSideProps } from 'next';
-import { parseCookies } from 'nookies';
 import { withSSRGuest } from '../utils/withSSRGuest';
+import {FaUserAlt} from 'react-icons/fa'
+import {RiLockPasswordFill} from 'react-icons/ri'
+import {MdEmail } from 'react-icons/md'
+import {AiOutlineLoading} from 'react-icons/ai'
 
+import styles from './styles.module.scss';
+import { useEffect, useRef, useState } from 'react';
+import Head from 'next/head';
+import { Input } from '../components/Form/Input';
+import { Errors } from '../components/Form/Errors';
+import { EmailVerification } from '../components/Methods_Login/EmailVerification';
+import { Element, Tooltip } from '../components/Tooltip';
 
 type SignInFormData = {
   email: string;
   password: string;
 }
 
+type SignUpFormData = {
+  username: string;
+  fullname: string;
+  email: string;
+  password: string;
+}
+
 const signInFormSchema = yup.object().shape({
-  email: yup.string().required("E-mail obrigatório").email(),
-  password: yup.string().required("Senha obrigatória")
+  email: yup.string().required("E-mail obrigatório").email('Digite um email válido.'),
+  password: yup.string().required("Senha obrigatória").min(6, 'A senha precisa ter mais que 6 caracteres.')
+})
+
+const signUpFormSchema = yup.object().shape({
+  email: yup.string().required("E-mail obrigatório").email('Digite um email válido.'),
+  password: yup.string().required("Senha obrigatória").min(6, 'A senha precisa ter mais que 6 caracteres.'),
+  username: yup.string().required("Username obrigatório"),
+  fullname: yup.string().required("Fullname é obrigatório")
 })
 
 export default function SignIn() {
-  const {signIn} = useAuth()
-  const { formState, handleSubmit, register } = useForm({
-    resolver: yupResolver(signInFormSchema)
-  });
+  const { signIn, signUp, verifyEmail, showVerifyEmail } = useAuth()
+  const { formState, handleSubmit, register } = useForm(
+    {
+      resolver: yupResolver(signInFormSchema),
+    },
+  );
 
-  const { errors } = formState;
+  const { formState: formStateUp, handleSubmit: handleSubmitUp , register: registerUp } = useForm(
+    {
+      resolver: yupResolver(signUpFormSchema),
+    },
+  );
+
+  let { errors } = formState;
+  let { errors: errorsUp } = formStateUp;
+
   const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
     
       await signIn({
         email: values.email,
         password: values.password
       })
-     
- 
   }
 
+  const handleSignUp: SubmitHandler<SignUpFormData> = async({email, fullname, password, username}, event) => {
+    await signUp({
+      email,
+      password,
+      fullname,
+      username
+    })
+  }
+
+
+  const signIn_ref = useRef(null);
+  const signUp_ref = useRef(null);
+  const container_ref = useRef(null);
+
+  const toggleForm = () => {
+
+    signIn_ref.current?.classList.toggle(styles.signIn);
+    signUp_ref.current?.classList.toggle(styles.signIn);
+    container_ref.current?.classList.toggle(styles.signIn)
+
+    signIn_ref.current?.classList.toggle(styles.signUp);
+    signUp_ref.current?.classList.toggle(styles.signUp);
+    container_ref.current?.classList.toggle(styles.signUp)
+    document.body.querySelectorAll('input').forEach(input => input.value = '');
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      signIn_ref.current?.classList.add(styles.signIn);
+      signUp_ref.current?.classList.toggle(styles.signIn);
+      container_ref.current?.classList.add(styles.signIn)
+    }, 500)
+  }, [])
+
+  const tooltip_ref = useRef(null)
+
+
   return (
-    <Flex
-      w="100vw"
-      h="100vh"
-      align="center"
-      justify="center"
-    >
 
-      <Flex
-        as="form"
-        width="100%"
-        maxWidth="360px"
-        bg="gray.800"
-        p="8"
-        borderRadius={8}
-        flexDir="column"
-        onSubmit={handleSubmit(handleSignIn)}
-      >
-        <Stack spacing={4}>
-          <Input
-            id='email'
-            name='email'
-            label='E-mail'
-            {...register('email')}
-            error={errors.email}
-          />
-          <Input
-            id='password'
-            type="password"
-            name='password'
-            error={errors.password}
-            label='Senha'
-            {...register('password')}
-          />
-        </Stack>
+    <main className={styles.container} ref={container_ref}>
+      <Head>
+        <title>Geogas System | Login</title>
+      </Head>
+        {/* verification */}
+          {showVerifyEmail && <EmailVerification />}
+          {/* <Tooltip ref={tooltip_ref}>
+              <Element />
+              <Element />
+              <Element />
+              
+          </Tooltip> */}
+        {/* end verification */}
+        <div className={styles.row}>
+          <form className={styles.interface_signUp} ref={signUp_ref} onSubmit={handleSubmitUp(handleSignUp)} >
+            <div className={styles.content_signUp}>
 
-        <Button
-          type="submit"
-          mt="6"
-          colorScheme="pink"
-          size="lg"
-          isLoading={formState.isSubmitting}
-        >
-          Entrar
-        </Button>
-      </Flex>
-    </Flex>
+                <label>
+                  <FaUserAlt />
+                  <input type="text" placeholder='Username' {...registerUp('username')} />
+                </label>
+                <Errors text={errorsUp.username?.message}/>
+                <label>
+                  <FaUserAlt />
+                  <input type="text" placeholder='Full name' {...registerUp('fullname')} />
+                </label>
+                <Errors text={errorsUp.fullname?.message}/>
+                <label>
+                  <MdEmail />
+                  <input type="email" placeholder='Email' {...registerUp('email')} />
+                </label>
+                <Errors text={errorsUp.email?.message}/>
+                <label>
+                  <RiLockPasswordFill />
+                  <input type="password" placeholder='Password' {...registerUp('password')} />
+                </label>
+                <Errors text={errorsUp.password?.message}/>
+                <button type="submit">
+                  {!formStateUp.isSubmitting && 'Sign up'}
+                  {formStateUp.isSubmitting && (<Spinner />)}
+                </button>
+
+                <div className={styles.container_infos_adicionais}>
+                    <p className={styles.text_secondary}>
+                        Already have an account? <span onClick={toggleForm} >Sign in here</span>
+                    </p>
+                </div>
+                
+              </div>
+          </form>
+          <form className={`${styles.interface_signIn}`} ref={signIn_ref} onSubmit={handleSubmit(handleSignIn)}>
+              <div className={styles.content_signIn}>
+                <label>
+                  <FaUserAlt />
+                  <input type="email" placeholder='Email'
+                  {...register('email')}
+                  />
+                </label>
+                <Errors text={errors.email?.message}/>
+                <label>
+                  <RiLockPasswordFill />
+                  <input type="password" placeholder='Password'  {...register('password')} />
+                </label>
+                <Errors text={errors.password?.message}/>
+                <button type='submit'>
+                  {!formState.isSubmitting && 'Sign in'}
+                  {formState.isSubmitting && (<Spinner />)}
+                </button>
+
+                <div className={styles.container_infos_adicionais}>
+                    <p className={styles.text_primary}>Forgot password?</p>
+
+                    <p className={styles.text_secondary}>
+                        Don't have an account? <span onClick={toggleForm}>Sign up here</span>
+                    </p>
+                </div>
+                
+              </div>
+          </form>
+        </div>
+
+        <div className={styles.content_forms}>
+          <div className={styles.content_signIn}>
+            <div className={styles.text}>
+              <h1>Welcome back!</h1>
+              <p>General analysis and reporting of the Geogas training system.</p>
+            </div>
+            <div className={styles.img}>
+              <img src="/login/trabalhadores.png" alt="capa_login" />
+            </div>
+          </div>
+
+          <div className={styles.content_signUp}>
+            <div className={styles.img}>
+              <img src="/logolg.png" alt="capa_login" />
+            </div>
+            <div className={styles.text}>
+              <h1>Create an account</h1>
+              <p>Here we manage all training.</p>
+            </div>
+           
+          </div>
+        </div>
+
+   
+    </main>
   )
 }
 

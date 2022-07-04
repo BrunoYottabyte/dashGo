@@ -1,0 +1,116 @@
+/** Header Component **/
+
+// Fragment Logo
+
+.logo{
+    width: 256px;
+    
+    img{
+        cursor: pointer;
+        width: 120px;
+        filter: invert(0.5) brightness(1.5);
+    }
+}
+
+@media screen and (max-width: 720px){
+    .logo{
+        img{
+            width: 80px;
+            margin-left: 16px;
+        }
+    }
+}
+
+// End Fragment Logo
+
+
+
+// Fragment Search
+.label{
+    display: flex;
+    flex: 1;
+
+    padding: 16px 32px;
+    margin-left: 24px;
+    max-width: 400px;
+    background-color: var(--bg-second);
+    align-items: center;
+    color: var(--gray-200);
+    position: relative;
+    border-radius: 13px;
+
+    input {
+        width: 100%;
+        color: var(--color-50);
+        background-color: transparent;
+        padding: 0 16px;
+        margin-right: 16px;
+        
+        &::placeholder{
+            color: var(--gray-400);
+        }
+    }
+}
+
+// End Fragment Search
+
+// Fragment NotificationsNav
+
+.notificationsNav{
+    display: flex;
+    gap: 8px;
+
+    margin: 0 16px;
+    padding: 4px 0;
+    padding-right: 24px;
+    border-right-width: 1px;
+    border-color: var(--gray-400);
+}
+
+// End Fragment NotificationsNav
+
+// Fragment Profile
+
+.profile{
+    display: flex;
+   
+    .informations{
+        margin-right: 16px;
+        text-align: right;
+
+        p{
+           color: var(--gray-400); 
+           font-size: 0.75rem;
+        }
+    }
+}
+
+// End Fragment Profile
+
+
+/** INDEX **/
+
+.container{
+    width: 100%;
+    max-width: 1480px;
+    height: 80px;
+    margin: 0 auto;
+    margin-top: 16px;
+    
+    display: flex;
+    align-items: center;
+
+    padding: 0 var(--hDefault);
+}
+
+.icon_button{
+    margin-right: 8px;
+}
+
+.group_notifications_profile{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    color: var(--color-50);
+
+}

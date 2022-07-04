@@ -1,54 +1,49 @@
-import { Flex, Icon, IconButton, useBreakpointValue } from '@chakra-ui/react';
+import { Icon, useBreakpointValue } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { RiMenuLine } from 'react-icons/ri';
 import { useSidebarDrawer } from '../../contexts/SidebarDrawerContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { Logo } from './Logo';
 import { NotificationsNav } from './NotificationsNav';
 import { Profile } from './Profile';
 import { Search } from './Search';
 
+// css
+import styles from './styles.module.scss';
 
 
 export function Header() {
-  
+     const [isWideVersion, setIsWideVersion] = useState(false);
+     const {breakpoints} = useTheme()
+
      const { onOpen } = useSidebarDrawer();
 
-     const isWideVersion = useBreakpointValue({
-          base: false,
-          lg: true
-     });
+
+     useEffect(() => {
+         const breakPoint = !breakpoints?.sm && !breakpoints?.md;
+         setIsWideVersion(breakPoint);
+     })
 
      return (
-          <Flex
-               as="header"
-               w="100%"
-               maxWidth={1480}
-               h="20"
-               mx="auto"
-               mt="4"
-               align="center"
-               px="6"
-          >
+          <header className={styles.container}>
                {!isWideVersion && (
-                    <IconButton
-                         aria-label="Open navigation"
-                         icon={<Icon as={RiMenuLine} />}
-                         fontSize="24"
-                         variant="unstyled"
-                         onClick={onOpen}
-                         mr="2"
-                    />
+                   <div
+                     className={styles.icon_button}
+                     onClick={onOpen}
+                   >
+                         <RiMenuLine
+                         fontSize={24}
+                         color="var(--color-50)"
+                         />
+                   </div>
                )}
                <Logo />
                {isWideVersion && <Search />}
-               <Flex
-                    align="center"
-                    ml="auto"
-       
-               >
+               
+               <div className={styles.group_notifications_profile}>
                     <NotificationsNav />
-
                     <Profile showProfileData={isWideVersion} />
-               </Flex>
-          </Flex >
+               </div>
+          </header>
      )
 }

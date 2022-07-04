@@ -1,24 +1,19 @@
 import {Text} from '@chakra-ui/react'
+import { useTheme } from '../../contexts/ThemeContext';
+
+import styles from './styles.module.scss';
 
 export function Logo(){
+     const {toggleTheme} = useTheme()
     return(
-        <Text
-                    fontSize={["2xl", "3xl"]}
-                    fontWeight="bold"
-                    
-                    letterSpacing="tight"
-                    w="64"
-                    _hover={{
-                         cursor: "pointer"
-                    }}
-                    onClick={() => document.body.classList.toggle('active')}
-               >
-                    dashgo
-                    <Text
-                         as="span"
-                         ml="1"
-                         color="pink.500"
-                    >.</Text>
-        </Text>
+          <div className={styles.logo} id="logo"
+               onClick={() => {
+               
+                    toggleTheme();
+                }
+               }
+          >
+               <img src="/logo.png" alt="Logo Geogas" />
+          </div>
     )
 }

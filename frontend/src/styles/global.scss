@@ -1,0 +1,124 @@
+
+:root {
+     /* Colors */
+
+     --bg-main: #FFFFFF;
+     --bg-second: #F0F0F0;
+     --color-100: #D1D2DC;
+     --color-50: #EEEEF2;
+     
+     /* DARK */
+     --gray-800: #1F2029;
+     --gray-400: #797D9A;
+     --gray-100: #D1D2DC;
+     --gray-50: #EEEEF2;
+
+     --blue-500: #349eff;
+     --blue-800: #0d508f;
+
+     /* Padding */
+     --hDefault: 24px;
+     /* Font sizes */
+     --small: 0.8rem
+}
+
+*{
+     padding: 0;
+     margin: 0;
+     box-sizing: border-box;
+     // font-family: 'Roboto', sans-serif;
+     transition: color 0.5s ease-in;
+}
+
+body{
+     font-family: 'Montserrat', sans-serif;
+}
+
+.theme-light{
+     --color-50: var(--gray-400);
+
+     #logo{
+          img{
+               filter: none;
+          }
+      }
+}
+
+.theme-dark{
+     --bg-main: #181B23;
+     --bg-second: var(--gray-800);      
+}
+
+
+     
+ 
+body {
+     .box::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          width: 5vw;
+          height: 5vw;
+          border-radius: max(100vw, 100vw);
+          transform: scale(0);
+          background-color: var(--gray-800);
+          left: -5vw;
+          bottom: -5vw;
+          transition: all 0.6s 0.6s ease;
+     }
+
+     .box{
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+          transition: all 0.4s 0.4s ease-in;
+          box-shadow: -10px 10px 5px rgba(0,0,0,0.2);
+          color: var(--color-50);
+     }
+
+     &::before{
+          content: "";
+          width: 10vw;
+          height: 10vw;
+          border-radius: max(100vw, 100vw);
+          background-color: var(--bg-main);
+          position: fixed;
+          z-index: -1;
+     
+          transform: scale(0);
+          transition: all 1.5s ease-in-out;
+          left: -5vw;
+          bottom: -5vw;
+          transform-origin: bottom bottom;
+     }
+
+     
+     label{
+          transition: all 0.4s ease;
+          transition-delay: 0.6s;
+     }
+
+
+}
+
+body.active {
+     .box::before {
+          content: "";
+          transform: scale(70);
+     }
+
+     .box {
+          box-shadow: -10px 10px 5px rgba(0,0,0,0.05); 
+     }
+
+     &::before{
+          transform: scale(50);
+     }
+
+}
+
+
+
+input {
+     outline: 0;
+}

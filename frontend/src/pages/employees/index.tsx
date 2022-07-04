@@ -31,7 +31,7 @@ export default function UserList() {
      return (
           <Box>
                <Head>
-                    <title>Users</title>
+                    <title>Employees | Geogas</title>
                </Head>
                <Header />
                <Flex
@@ -47,13 +47,13 @@ export default function UserList() {
                          <Flex mb="8" justify="space-between" align="center" >
                               <Heading size="lg" fontWeight="normal">
                                    <Flex justify="center" align="center">
-                                        Usuários {!isLoading && isFetching && (
+                                        Employees {!isLoading && isFetching && (
                                              <Spinner ml="2" size="sm" />
                                         )}
                                    </Flex>
                               </Heading>
 
-                              <NextLink href="/users/create" passHref>
+                              <NextLink href="/employees/create" passHref>
                                    <Button
                                         as="a"
                                         size="sm"

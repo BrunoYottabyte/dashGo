@@ -14,9 +14,23 @@ type SignInCredentials = {
     password: string;
 }
 
+type SignUpSubscription = {
+    username: string;
+    fullname: string;
+    email: string;
+    password: string;
+}
+
+type VerifyEmailData = {
+    code: string | number;
+}
+
 type AuthContextData = {
     signIn: (credentials: SignInCredentials) => void;
-   
+    signUp: (subscription: SignUpSubscription) => void;
+    verifyEmail: (code: VerifyEmailData) => void;
+    showVerifyEmail?: boolean; 
+    verifiedEmail: boolean;
     user: User;
     isAuthenticated: boolean;
 }
@@ -38,6 +52,8 @@ export const signOut = () => {
 
 export function AuthProvider({ children }: AuthProviderParams) {
     const [user, setUser] = useState<User>(null)
+    const [showVerifyEmail,setShowVerifyEmail] = useState(false);
+    const [verifiedEmail,setVerifiedEmail] = useState(false);
     const isAuthenticated = !user;
 
 
@@ -113,8 +129,30 @@ export function AuthProvider({ children }: AuthProviderParams) {
    
     }
 
+    async function signUp({email, fullname, password, username}: SignUpSubscription){
+        try{
+            const response = await api.post('/user/', {email, fullname, password, username});
+            setShowVerifyEmail(true);
+        }catch(err){
+            console.log(err);
+            setShowVerifyEmail(false);
+        }
+    }
+
+    async function verifyEmail({code}: VerifyEmailData){
+        try{
+            const response = await api.post('/user/verifyEmail', {code});
+            setVerifiedEmail(true)
+            setTimeout(() => setShowVerifyEmail(false), 1500);
+            setTimeout(() => {Router.reload(); setVerifiedEmail(false)}, 1500);
+        }catch(err){
+            console.log(err)
+            setVerifiedEmail(false);
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ signIn, user, isAuthenticated }}>
+        <AuthContext.Provider value={{ signIn, signUp, user, isAuthenticated, showVerifyEmail, verifiedEmail, verifyEmail}}>
             {children}
         </AuthContext.Provider>
     )

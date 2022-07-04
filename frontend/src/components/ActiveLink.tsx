@@ -8,11 +8,13 @@ interface ActiveLinkProps extends LinkProps{
 
 export function ActiveLink ({children, ...rest}: ActiveLinkProps){
     const {asPath} = useRouter();
+  
     const isActive = asPath === rest.href || asPath.includes(String(rest.href));
+
     return(
         <Link {...rest}>
             {cloneElement(children, {
-                color: isActive ? 'pink.400': 'gray.50'
+                style: {color: isActive ? 'var(--blue-500)': 'var(--color-50)'}
             })}
         </Link>
     )

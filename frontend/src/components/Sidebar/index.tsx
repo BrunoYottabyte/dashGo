@@ -1,39 +1,41 @@
 import { Box, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, useBreakpointValue } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSidebarDrawer } from "../../contexts/SidebarDrawerContext";
+import { useTheme } from "../../contexts/ThemeContext";
 
 import { SidebarNav } from "./SidebarNav";
+import styles from './styles.module.scss';
 
 export function Sidebar() {
 
     const {isOpen, onClose} = useSidebarDrawer()
+    const {breakpoints} = useTheme()
 
-    const isDrawerSidebar = useBreakpointValue({
-        base: true,
-        lg: false
-    })
+    if(typeof window !== 'undefined'){
+        let isDrawerSidebar = breakpoints?.sm || breakpoints?.md;
+ 
+
+        if(isDrawerSidebar){
+            return(
+                <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+                    <DrawerOverlay >
+                        <DrawerContent bg="var(--bg-main)" p="4">
+                            <DrawerCloseButton mt="6" color="var(--color-50)"/>
+                            <DrawerHeader color="var(--color-50)">Navegação</DrawerHeader>
+                            <DrawerBody>
+                                <SidebarNav />
+                            </DrawerBody>
+                        </DrawerContent>
+                    </DrawerOverlay>
+                </Drawer>
+            )
+        }
 
 
-
-    if(isDrawerSidebar){
-        return(
-            <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-                <DrawerOverlay>
-                    <DrawerContent bg="gray.800" p="4">
-                        <DrawerCloseButton mt="6" />
-                        <DrawerHeader>Navegação</DrawerHeader>
-                        <DrawerBody>
-                            <SidebarNav />
-                        </DrawerBody>
-                    </DrawerContent>
-                </DrawerOverlay>
-            </Drawer>
+        return (
+            <div className={styles.box}>
+                <SidebarNav />
+            </div>
         )
     }
-
-    return (
-        <Box as="aside" w="64" mr="8">
-            <SidebarNav />
-        </Box >
-    )
 }

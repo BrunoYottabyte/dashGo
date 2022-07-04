@@ -2,13 +2,13 @@ const mongoose = require('../../db');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
-    required: [true, 'Name is required'],
+    required: [true, 'Username is required'],
   },
-  last: {
+  fullname: {
     type: String,
-    required: [true, 'Last name is required'],
+    required: [true, 'Full name is required'],
   },
   password: {
     type: String,

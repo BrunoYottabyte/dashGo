@@ -1,0 +1,58 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.box_layout{
+    display: flex;
+    width: 100vw;
+    
+    margin-top: 2.5rem;
+    padding: 0 var(--hDefault);
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 16px;
+
+        *{
+            background-color: transparent;
+        }
+
+        .box {
+            flex: 1;
+            background-color: var(--bg-second);
+            min-width: 320px;
+            max-height: 250px;
+            border-radius: 16px;
+            padding: 32px;
+            display: block;
+            overflow: hidden;
+        }
+
+        .box_small{
+            min-width: 250px;
+            max-height: 150px;
+
+            display: flex;
+            align-items: center; 
+        }
+
+        .count_informations{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .charts{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+       
+    }
+}
+

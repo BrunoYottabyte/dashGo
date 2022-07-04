@@ -1,0 +1,57 @@
+/** Sidebar Component **/
+
+/* Index */
+
+.box{
+    min-width: 256px;
+    margin-right: 24px;
+}
+
+/* End Index */
+
+
+/* Fragment NavLink*/
+    
+.link{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    span{
+        font-size: 20px;
+    }
+    p{
+        margin-left: 16px;
+    }
+}
+
+/* End Fragment NavLink */
+
+/* Fragment NavSection*/
+
+.title{
+    font-size: var(--small);
+    color: var(--gray-400);
+    font-weight: bold;
+    
+}
+
+.group_link{
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+    gap: 16px 0;
+
+}
+
+
+/* End Fragment NavSection */
+
+.sidebarNav{
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+
+}
+
+/**/

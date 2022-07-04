@@ -21,7 +21,7 @@ const createRefreshToken = (email) => {
 const generateJwtAndRefreshToken = async(email, payload = {}) =>{
   const token = jwt.sign(payload, authConfig.secret, {
     subject: email,
-    expiresIn: 60 * 15 // 15 min
+    expiresIn: 5 // 15 min
   })
 
   const refreshToken = createRefreshToken(email);
@@ -40,25 +40,25 @@ const generateTokenPassword = () => {
 };
 
 router.post('/', async (req, res) => {
-  const { email, first, last, password } = req.body;
+  const { email, username, fullname, password } = req.body;
   const administratorsDefault = ['bsiqueira@geogas.com.br', 'lvalle@geogas.com.br'];
   try {
     let verifyEmail = email.split('@')[1].split('.')[0];
 
     if (!/^geogas$/i.test(verifyEmail))
-      return res.json({
+      return res.status(401).json({
         error: true,
         message: 'You need to be a Geogas employee',
       });
 
     if (await User.findOne({ email })) {
-      return res.send({ error: true, message: 'User already exists' });
+      return res.status(401).json({ error: true, message: 'User already exists' });
     }
 
     async function createUser(){
       const user = {
-        name: first,
-        last,
+        fullname,
+        username,
         email,
         permissions: ['metrics.list'],
         roles: ['user'],
@@ -75,7 +75,7 @@ router.post('/', async (req, res) => {
     }
 
     let ac = [];
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 0; i <= 8; i++) {
       ac.push(Math.floor(Math.random() * 10));
     }
     const hash = ac.join('');
@@ -88,7 +88,7 @@ router.post('/', async (req, res) => {
           subject: 'Check your email :)',
           template: 'verifyEmail',
           context: {
-            name: first,
+            name: fullname.split(' ')[0],
             hash,
             app: process.env.APP_EMAIL,
           },
@@ -191,19 +191,18 @@ router.post('/refresh', refeshAuth, async (req, res) => {
 })
 
 router.post('/verifyEmail', async (req, res) => {
-  const { code, user } = req.body;
+  const { code } = req.body;
   try {
-    const userBD = await User.findOne({ email: user.email });
-    if (!userBD) return res.json({ error: true, message: 'User not found :(' });
-    if (code != userBD.codeVerifyEmail)
-      return res.json({ error: true, message: 'Code invalid' });
+    console.log(code);
+    const userBD = await User.findOne({ codeVerifyEmail: code });
+    if (!userBD) return res.status(401).json({ error: true, message: 'User not found :(' });
 
     await User.findByIdAndUpdate(userBD._id, {
       verifyEmail: true,
       codeVerifyEmail: '',
     });
 
-    res.json({ message: 'success' });
+    res.json({ message: 'Email successfully verified' });
   } catch (err) {
     res.json({ error: true, message: err.message });
   }
