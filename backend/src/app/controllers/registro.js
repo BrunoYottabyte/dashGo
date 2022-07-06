@@ -13,7 +13,7 @@ const middlewareAuth = require('../middlewares/auth');
 const mailer = require('../../modules/mailer.js');
 const path = require('path');
 
-// router.use(middlewareAuth);
+router.use(middlewareAuth);
 //Create
 router.post('/', async (req, res) => {
   try {

@@ -8,7 +8,6 @@ const middlewareAuth = require('../middlewares/auth');
 
 // router.use(middlewareAuth);
 
-
 router.post('/', async (req, res) => {
   try {
     const funcionario = await Funcionario(req.body).save();
@@ -51,9 +50,9 @@ router.get('/', async (req, res) => {
       }, 0);
 
       totalSistema += totalCargaHoraria;
-      
+
       //Recuperando treinamentos obrigatórios de acordo com a função do usuário
-      
+
       let { treinamentosObrig } = await Funcao.findById(
         funcionario.funcaoId
       ).select('treinamentosObrig -_id');
@@ -76,6 +75,8 @@ router.get('/', async (req, res) => {
         );
       }
 
+      
+
       funcionario = {
         ...funcionario._doc,
         listaPendentes,
@@ -84,11 +85,25 @@ router.get('/', async (req, res) => {
       funcionarios.push(funcionario);
     }
 
+    // Paginação
+    const { page, per_page = 10 } = req.query;
+
+    const total = funcionarios.length;
+    console.log(page);
+    const pageStart = (Number(page) - 1) * Number(per_page);
+    const pageEnd = pageStart + Number(per_page);
+
+    const employees = funcionarios
+      .slice(pageStart, pageEnd);
+
     
 
-    res.json({
+    res.set('x-total-count', String(total));
+    res.set('Access-Control-Expose-Headers', 'x-total-count')
+
+    return res.json({
       error: false,
-      funcionarios,
+      employees,
       systemWorkload: totalSistema
     });
   } catch (err) {

@@ -42,7 +42,8 @@ type monthOfYear = {
      dez: number[],
 }
 
-export default function Dashboard() {
+export default function Dashboard(props) {
+     console.log('testtt', props);
      const { showToast } = useToast();
      const [registros, setRegistros] = useState([]);
      const [weekOfDay, setWeekOfDay] = useState<weekOfDayProperties>({} as weekOfDayProperties);
@@ -254,17 +255,14 @@ export default function Dashboard() {
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
+
      const apiSSR = setupClientApi(ctx);
-     const response = await apiSSR.get('/user/me')
 
-     // try{
-     //      const registros = await apiSSR.get('/registro/');
-     // }catch(err){
-     //      showToast('danger', 'Error', err.response?.data.message);
-     // }
-
+     const registros = await apiSSR.get('/registro/');
+  
      return {
           props: {
+  
           }
      }
 })

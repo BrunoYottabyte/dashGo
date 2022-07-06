@@ -5,7 +5,7 @@
      --bg-main: #FFFFFF;
      --bg-second: #F0F0F0;
      --color-100: #D1D2DC;
-     --color-50: #EEEEF2;
+     --color-50: var(--gray-400);
 
 
      --gray-800: #1F2029;
@@ -32,7 +32,6 @@
      padding: 0;
      margin: 0;
      box-sizing: border-box;
-     // font-family: 'Roboto', sans-serif;
      transition: color 0.5s ease-in;
 }
 
@@ -41,8 +40,6 @@ body{
 }
 
 .theme-light{
-     --color-50: var(--gray-400);
-
      #logo{
           img{
                filter: none;
@@ -64,6 +61,7 @@ body {
           position: absolute;
           z-index: -1;
           width: 5vw;
+ 
           height: 5vw;
           border-radius: max(100vw, 100vw);
           transform: scale(0);
@@ -71,15 +69,17 @@ body {
           left: -5vw;
           bottom: -5vw;
           transition: all 0.6s 0.6s ease;
+   
      }
 
      .box{
           position: relative;
-          overflow: hidden;
+       
           z-index: 1;
           transition: all 0.4s 0.4s ease-in;
           box-shadow: -10px 10px 5px rgba(0,0,0,0.2);
           color: var(--color-50);
+          
      }
 
      &::before{
@@ -90,7 +90,6 @@ body {
           background-color: var(--bg-main);
           position: fixed;
           z-index: -1;
-     
           transform: scale(0);
           transition: all 1.5s ease-in-out;
           left: -5vw;
@@ -110,10 +109,12 @@ body {
 body.active {
      .box::before {
           content: "";
-          transform: scale(70);
+          transform: scale(2);
+          max-width: 80vw;
      }
 
      .box {
+          overflow-y: hidden !important;
           box-shadow: -10px 10px 5px rgba(0,0,0,0.05); 
      }
 
@@ -142,3 +143,12 @@ input {
       // This is for custom headers
     
      }
+
+.flex-h-center{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+a, button{
+     cursor: pointer;
+}

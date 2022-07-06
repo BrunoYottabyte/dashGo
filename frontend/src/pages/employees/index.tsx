@@ -5,143 +5,133 @@ import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
 import NextLink from "next/link";
 import { Pagination } from "../../components/Pagination";
-import { useUsers } from "../../services/hooks/useUsers";
 import { useState } from "react";
-import { queryClient } from "../../services/queryClient";
-import { api, setupClientApi } from "../../services/api";
 import { withSSRAuth } from "../../utils/withSSRAuth";
+import styles from './styles.module.scss';
+import { useUsers } from "../../services/hooks/useEmployees";
 
 
 
-export default function UserList() {
+
+export default function EmployeeList() {
      const [page, setPage] = useState(1);
      const { data, isLoading, error, isFetching } = useUsers(page);
-
-     // const handlePrefetchUser = async(userId: string) => {
-     //      await queryClient.prefetchQuery(['user', userId], async () => {
-     //           const response = await api.get(`users/${userId}`)
-
-     //           return response.data
-     //      }, {
-     //           staleTime: 1000 * 60 * 10 // 10 minutes
-     //      })
-
-     // }
-
+   
      return (
-          <Box>
+
+
+          < >
                <Head>
                     <title>Employees | Geogas</title>
                </Head>
                <Header />
-               <Flex
-                    w="100%"
-                    my="6"
-                    maxWidth={1480}
-                    mx="auto"
-                    px="6"
-               >
+
+               <div className={styles.box_employees}>
                     <Sidebar />
 
-                    <Box flex="1" borderRadius="8" bg="gray.800" p={["6", "8"]} overflowX={["scroll", "scroll", "auto"]}>
-                         <Flex mb="8" justify="space-between" align="center" >
-                              <Heading size="lg" fontWeight="normal">
-                                   <Flex justify="center" align="center">
-                                        Employees {!isLoading && isFetching && (
-                                             <Spinner ml="2" size="sm" />
-                                        )}
-                                   </Flex>
-                              </Heading>
+                    <div className={`${styles.box_table} box`}>
+                         <div className={styles.header}>
+                              <h1>Employees {
+                                   !isLoading && isFetching && (
+                                        <Spinner ml="2" size="sm" />
+                                   )
+                              }</h1>
 
                               <NextLink href="/employees/create" passHref>
                                    <Button
                                         as="a"
                                         size="sm"
                                         fontSize="sm"
-                                        colorScheme="pink"
-                                        leftIcon={<Icon fontSize="20" as={RiAddLine} />}
+                                        colorScheme="facebook"
+                                        leftIcon={<Icon fontSize="15" as={RiAddLine} />}
                                    >
                                         Criar novo
                                    </Button>
                               </NextLink>
-                         </Flex>
+                         </div>
+                        
 
+                         {isLoading ? (
+                              <div className="flex-h-center">
+                                   <Spinner />
+                              </div>
+                         ) : error ? (
+                              <div className="flex-h-center">
+                                   <p>Falha ao obter dados do usuário</p>
+                              </div>
+                         ) : (
+                              <>
+                                   <table>
+                                        <thead>
+                                             <tr>
+                                                  <th>
+                                                       <input type={'checkbox'} />
+                                                  </th>
+                                                  <th>Usuário</th>
+                                                  <th>Data de Cadastro</th>
+                                                  <th></th>
+                                             </tr>
+                                        </thead>
 
-                         {
-                              isLoading ? (
-                                   <Flex justify="center">
-                                        <Spinner />
-                                   </Flex>
-                              ) : error ? (
-                                   <Flex justify="center">
-                                        <Text>Falha ao obter dados do usuário</Text>
-                                   </Flex>
-                              ) : (
-                                   <>
-                                        <Table colorScheme="whiteAlpha">
-                                             <Thead>
-                                                  <Tr>
-                                                       <Th px={["4", "4", "6"]} color="gray.300" width="8" >
-                                                            <Checkbox colorScheme="pink" />
-                                                       </Th>
-                                                       <Th>Usuário</Th>
-                                                       <Th>Data de Cadastro</Th>
-                                                       <Th w="8" />
-                                                  </Tr>
-                                             </Thead>
-                                             <Tbody>
-                                                  {data.users.map(user => (
-                                                       <Tr key={user.id}>
-                                                            <Td px={["4", "4", "6"]}>
-                                                                 <Checkbox colorScheme="pink" />
-                                                            </Td>
+                                        <tbody className={styles.tbody}>
+                                             {data.employees?.map(employee => {
+                                                
+                                                  return (
+                                                  
+                                                       <tr key={employee._id}>
+                                                            <td>
+                                                                 <input type={"checkbox"} />
+                                                            </td>
 
-                                                            <Td>
-                                                                 <Box>
-                                                                      <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(user.id)}>
-                                                                           <Text fontWeight="bold" >{user.name}</Text>
-                                                                      </Link>
-                                                                      <Text color="gray.300" fontSize="small" >{user.email}</Text>
-
-                                                                 </Box>
-                                                            </Td>
-                                                            <Td>{user.createdAt}</Td>
-                                                            <Td>
+                                                            <td>
+                                                                 <div className={styles.info_pessoal}>
+                                                                      <a>
+                                                                           {employee.nome}
+                                                                      </a>
+                                                                      <small>{employee.funcaoId?.nome}</small>
+                                                                 </div>
+                                                            </td>
+                                                            <td>{employee.createdAt}</td>
+                                                            <td>
                                                                  <Button
                                                                       as="a"
                                                                       size="sm"
                                                                       fontSize="sm"
-                                                                      colorScheme="purple"
+                                                                      colorScheme="facebook"
                                                                       leftIcon={<Icon as={RiPencilLine} />}
+
                                                                  >
                                                                       Editar
                                                                  </Button>
-                                                            </Td>
-                                                       </Tr>
-                                                  ))}
-                                             </Tbody>
-                                        </Table>
-                                        <Pagination 
-                                             totalCountOfRegisters={data.totalCount}
-                                             currentPage={page}
-                                             onPageChange={setPage}
-                                        />
-                                   </>
-                              )
+                                                            </td>
+                                                      
+                                                       </tr>
+                                                
+                                                  )
+                                             })}
+                                        </tbody>
+                                   </table>
+
+                                   <Pagination
+                                        totalCountOfRegisters={data.totalCount}
+                                        currentPage={page}
+                                        onPageChange={setPage}
+                                   />
+                              </>
+                         )
                          }
 
-                    </Box>
-               </Flex>
-          </Box>
+                    </div>
+               </div>
+          </>
      )
 }
 
-export const getServerSideProps = withSSRAuth(async(ctx) => {
-     const apiSSR = setupClientApi(ctx);
-     const response = await apiSSR.get('/user/me');
+export const getServerSideProps = withSSRAuth(async (ctx) => {
 
-          return {
-               props: {
-               }
+     return {
+          props: {
+
           }
+     }
 })

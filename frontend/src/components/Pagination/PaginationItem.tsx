@@ -13,10 +13,10 @@ export function PaginationItem({isCurrent = false, number, onPageChange}:Paginat
                 size="sm"
                 fontSize="xs"
                 width="4"
-                colorScheme="pink"
+                colorScheme="blue"
                 disabled
                 _disabled={{
-                    bgColor: 'pink.500',
+                    bgColor: 'gray.400',
                     cursor: 'default'
                 }}
             >
