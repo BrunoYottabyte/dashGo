@@ -21,7 +21,7 @@ const createRefreshToken = (email) => {
 const generateJwtAndRefreshToken = async(email, payload = {}) =>{
   const token = jwt.sign(payload, authConfig.secret, {
     subject: email,
-    expiresIn: 5 // 15 min
+    expiresIn: 15 // 15 min
   })
 
   const refreshToken = createRefreshToken(email);

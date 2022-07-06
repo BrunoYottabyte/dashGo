@@ -28,7 +28,6 @@ export default function ThemeProvider({children}: ThemeProviderProps){
                 if(mode){
                     return mode;
                 }
-        
                 return 'theme-light';
             }
         });
@@ -62,6 +61,7 @@ export default function ThemeProvider({children}: ThemeProviderProps){
         }, [])
 
         useEffect(() => {
+            
             if(theme === 'theme-dark'){
                document.body.className = `${theme} active`
             }else{
@@ -70,12 +70,14 @@ export default function ThemeProvider({children}: ThemeProviderProps){
      }, [theme])
     
         function toggleTheme(){
-            if(theme === 'theme-light'){
-                localStorage.setItem('@theme', 'theme-dark');
-                setTheme('theme-dark');
-            }else{
-                localStorage.setItem('@theme', 'theme-light');
-                setTheme('theme-light');
+            if(typeof window !== 'undefined'){
+                if(theme === 'theme-light'){
+                    localStorage.setItem('@theme', 'theme-dark');
+                    setTheme('theme-dark');
+                }else{
+                    localStorage.setItem('@theme', 'theme-light');
+                    setTheme('theme-light');
+                }
             }
         }
     

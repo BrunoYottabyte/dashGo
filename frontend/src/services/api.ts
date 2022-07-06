@@ -50,8 +50,6 @@ export const setupClientApi = (ctx = undefined) => {
                         failedRequestQueue = [];
                         if (process.browser) {
                             signOut();
-                        }else{
-                            destroyCookie(ctx, 'nextauth.token')
                         }
                     }).finally(() => {
                         isRefreshing = false;
@@ -72,7 +70,6 @@ export const setupClientApi = (ctx = undefined) => {
 
             } else {
                 if (process.browser) {
-              
                     signOut();
                 } else {
                     return Promise.reject(new AuthTokenError())

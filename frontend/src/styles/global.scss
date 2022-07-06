@@ -128,3 +128,17 @@ body.active {
 input {
      outline: 0;
 }
+     // This is for custom box
+     .apexcharts-tooltip {
+          border-radius: 12px;
+          box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3) !important;
+          color: var(--gray-800) !important;
+       // This is for custom header
+            &.apexcharts-theme-light .apexcharts-tooltip-title {
+               color: var(--gray-800) !important;
+               border-bottom: 0;
+               font-weight: bold;
+             }
+      // This is for custom headers
+    
+     }

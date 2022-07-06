@@ -1,4 +1,4 @@
-import { Icon, useBreakpointValue } from '@chakra-ui/react';
+
 import { useEffect, useState } from 'react';
 import { RiMenuLine } from 'react-icons/ri';
 import { useSidebarDrawer } from '../../contexts/SidebarDrawerContext';

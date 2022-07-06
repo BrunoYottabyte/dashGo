@@ -133,7 +133,7 @@ export function AuthProvider({ children }: AuthProviderParams) {
 
     async function signUp({email, fullname, password, username}: SignUpSubscription){
             const response = await api.post('/user/', {email, fullname, password, username});
-            console.log(response);
+            // console.log(response);
             if(response.status === 200){
                 setShowVerifyEmail(true);
             }else{
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: AuthProviderParams) {
             setTimeout(() => setShowVerifyEmail(false), 1500);
             setTimeout(() => {Router.reload(); setVerifiedEmail(false)}, 1500);
         }catch(err){
-            console.log(err)
+            // console.log(err)
             setVerifiedEmail(false);
         }
     }

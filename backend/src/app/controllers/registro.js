@@ -6,13 +6,14 @@ const User = require('../models/users');
 const router = express.Router();
 const Arquivo = require('../models/arquivo');
 
+
 const middlewareAuth = require('../middlewares/auth');
 
 //nodemailer
 const mailer = require('../../modules/mailer.js');
 const path = require('path');
 
-router.use(middlewareAuth);
+// router.use(middlewareAuth);
 //Create
 router.post('/', async (req, res) => {
   try {
@@ -91,9 +92,15 @@ router.get('/', async (req, res) => {
 
     numberOfEmployees = numberOfEmployees.length;
 
+    //Registros de 1 semana atras contando apartir da data atual
+    var start = moment().day(0),
+    end = moment().day(6);
+
+    const week = await Registro.find({ dataCadastro: { $gte: start, $lte: end } });
+
     res.json({
       error: false,
-      ...{ registros: [...registros], numberOfEmployees },
+      ...{ registros: [...registros], numberOfEmployees, week },
     });
   } catch (err) {
     res.json({ error: true, message: err.message });
