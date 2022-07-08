@@ -122,23 +122,38 @@ router.get('/:id', async (req, res) => {
       select: 'nome',
     });
 
+    let totalCargaHoraria;
+        //recuperando todos os registros desse funcionario
+      let registros = await Registro.find({
+        funcionarioId: id,
+      }).populate('treinamentoId');
+      //recuperando a carga horaria total de cada Funcionário
+      arr = registros.map((treinamento) => treinamento.cargaHoraria);
+      //somando a carga horaria recuperada
+      totalCargaHoraria = arr.reduce((ac, va) => {
+        ac += va;
+        return ac;
+      }, 0);
     return res.json({
       error: false,
-      employee: response
+      employee: response,
+      totalCargaHoraria
     })
 
   } catch (err) {
     res.json({
       error: true,
-      message: err.message,
+      message: err.message
     });
   }
 });
 
 router.put('/:id', async (req, res) => {
   try {
+    const id = req.params.id;
     const dados = req.body;
-    const response = await Funcionario.findByIdAndUpdate(req.params.id, dados);
+    console.log(dados);
+    const response = await Funcionario.findByIdAndUpdate(id, dados);
     res.json({ error: false, response });
   } catch (err) {
     res.json({ error: true, message: err.message });
