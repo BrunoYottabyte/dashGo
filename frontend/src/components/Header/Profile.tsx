@@ -1,5 +1,4 @@
 import { Flex, Box, Avatar, Text } from "@chakra-ui/react";
-import { useAuth, signOut } from "../../contexts/AuthContext";
 
 import styles from './styles.module.scss';
 
@@ -20,7 +19,7 @@ export function Profile({showProfileData = true}:ProfileProps ){
                 )}
 
                 <Avatar
-                onClick={signOut}
+                
                 size="md"
                 name="Bruno Siqueira"
                 src="https://github.com/brunoyottabyte.png"

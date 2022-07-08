@@ -43,7 +43,6 @@ type monthOfYear = {
 }
 
 export default function Dashboard(props) {
-     console.log('testtt', props);
      const { showToast } = useToast();
      const [registros, setRegistros] = useState([]);
      const [weekOfDay, setWeekOfDay] = useState<weekOfDayProperties>({} as weekOfDayProperties);

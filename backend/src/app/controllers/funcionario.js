@@ -114,6 +114,27 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  const id = req.params.id
+  try {
+    const response = await Funcionario.findById(id).populate({
+      path: 'funcaoId',
+      select: 'nome',
+    });
+
+    return res.json({
+      error: false,
+      employee: response
+    })
+
+  } catch (err) {
+    res.json({
+      error: true,
+      message: err.message,
+    });
+  }
+});
+
 router.put('/:id', async (req, res) => {
   try {
     const dados = req.body;

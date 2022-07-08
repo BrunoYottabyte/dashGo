@@ -1,0 +1,149 @@
+.box_employees {
+    width: 100%;
+    max-width: 1480px;
+    padding: 0 var(--hDefault);
+    display: flex;
+}
+
+.employee_data_box {
+    width: 100%;
+
+
+    .header_data_box {
+        
+        padding: 25px;
+        background-color: var(--blue-800);
+        filter: brightness(0.9);
+        color: #FFF;
+    }
+
+    @media screen and(max-width: 1000px) {
+        width: max-content;
+    }
+}
+
+.box_content {
+    
+    flex: 1;
+    background-color: var(--bg-second);
+    border-radius: 8px;
+    overflow-x: auto !important;
+
+    .employee_data_box {
+        h1 {
+            margin-bottom: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+        }
+
+        .data_preview {
+            display: flex;
+            justify-content: space-between;
+
+            label {
+                display: flex;
+                gap: 10px;
+
+                input {
+               
+                    transition: all 2s ease !important;
+                    background-color: var(--bg-main);
+                    margin-left: 2px;
+                    padding: 0 5px;
+                    border-radius: 4px;
+                    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.075);
+
+                    &:disabled {
+                        opacity: 0.8;
+                    }
+
+                    color: var(--gray-400);
+                }
+
+                +label {
+                    margin-left: 5px;
+                }
+
+
+            }
+
+            button {
+                margin-left: auto;
+                background-color: var(--blue-500);
+                padding: 0 15px;
+                color: #F0F0F0;
+
+                transition: 0.3s ease;
+
+                &:hover {
+                    filter: brightness(0.85);
+                    color: #F0F0F0;
+                }
+            }
+        }
+    }
+
+    .employee_records {
+        padding: 25px;
+
+        .header {
+
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #ccc;
+
+            h1 {
+                font-weight: bold;
+                font-size: 1.4rem;
+            }
+
+            button {
+                margin-left: auto;
+                background-color: var(--blue-500);
+                padding: 0 15px;
+                color: #F0F0F0;
+
+                transition: 0.3s ease;
+
+                &:hover {
+                    filter: brightness(0.9);
+                    color: #F0F0F0;
+                }
+            }
+        }
+
+        .body_employee_records {
+
+            table {
+                width: 100%;
+
+                th,
+                td {
+                    width: 50px;
+                    padding: 0.5rem;
+                    text-align: center;
+                    border-bottom: 1px solid rgba(204, 204, 204, 0.356);
+                }
+
+                td {
+                    padding: 1rem;
+                    &:nth-child(1){
+                        background-color: rgba(49, 65, 65, 0.329);
+                        color: #F0F0F0;
+                        font-weight: bold;
+                        letter-spacing: 1px;
+                        cursor: pointer;
+                        &:hover{
+                            filter: brightness(0.4);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+}

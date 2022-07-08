@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, Button, Icon, Table, Thead, Tr, Th, Checkbox, Tbody, Td, Text, useBreakpointValue, Spinner, Link } from "@chakra-ui/react";
+import { Button, Icon, Spinner, Link } from "@chakra-ui/react";
 import Head from "next/head";
-import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import { RiAddLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
 import NextLink from "next/link";
@@ -8,15 +8,29 @@ import { Pagination } from "../../components/Pagination";
 import { useState } from "react";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 import styles from './styles.module.scss';
-import { useUsers } from "../../services/hooks/useEmployees";
-
-
+import { getEmployeesId, getRecordsEmployee, useUsers } from "../../services/hooks/useEmployees";
+import { queryClient } from "../../services/queryClient";
+import { api } from "../../services/api";
+import { useRouter } from "next/router";
+import { useFetch } from "../../contexts/FetchContext";
 
 
 export default function EmployeeList() {
      const [page, setPage] = useState(1);
      const { data, isLoading, error, isFetching } = useUsers(page);
-   
+     const {setFetch} = useFetch();
+
+     async function handlePrefetchEmployee (userId: string){
+          await queryClient.prefetchQuery(['employeeId', userId], () => getEmployeesId(userId), {
+               staleTime: 1000 * 60 * 10 
+          });
+     }
+
+     async function handlePrefetchRecords (userId: string){
+          await queryClient.prefetchQuery(['RecordsEmployeeId', userId], () => getRecordsEmployee(userId), {
+               staleTime: 1000 * 60 * 10
+          })
+     }
      return (
 
 
@@ -49,7 +63,7 @@ export default function EmployeeList() {
                                    </Button>
                               </NextLink>
                          </div>
-                        
+
 
                          {isLoading ? (
                               <div className="flex-h-center">
@@ -64,49 +78,60 @@ export default function EmployeeList() {
                                    <table>
                                         <thead>
                                              <tr>
-                                                  <th>
-                                                       <input type={'checkbox'} />
-                                                  </th>
-                                                  <th>Usuário</th>
-                                                  <th>Data de Cadastro</th>
-                                                  <th></th>
+                                                  <th>Informações</th>
+                                                  <th>Funcionário</th>
+                                                  <th>Treinamentos pendentes</th>
+                                                  <th>Status</th>
+                                                  <th>Interno</th>
+                                                  <th>Horas concluídas</th>
                                              </tr>
                                         </thead>
 
                                         <tbody className={styles.tbody}>
                                              {data.employees?.map(employee => {
-                                                
+                                             
                                                   return (
-                                                  
-                                                       <tr key={employee._id}>
-                                                            <td>
-                                                                 <input type={"checkbox"} />
-                                                            </td>
+                                                       <tr key={employee.id}>   
 
+                                                            <td onMouseEnter={() => {
+                                                              
+                                                              handlePrefetchEmployee(employee?.id)
+                                                              handlePrefetchRecords(employee?.id)
+                                                              setFetch(employee?.id);
+                                                     
+                                                        }}>
+                                                                <NextLink href="/employees/info" >
+                                                                 
+                                                                           Visualizar
+                                                                    
+                                                                </NextLink>
+                                                            </td>
                                                             <td>
                                                                  <div className={styles.info_pessoal}>
                                                                       <a>
                                                                            {employee.nome}
                                                                       </a>
-                                                                      <small>{employee.funcaoId?.nome}</small>
+                                                                      <small>{employee.cargo}</small>
+                                                                 </div>
+
+                                                            </td>
+                                                            <td>
+                                                                 <div className={styles.preencher}>
+                                                                      {employee.pendentes?.length}
                                                                  </div>
                                                             </td>
-                                                            <td>{employee.createdAt}</td>
                                                             <td>
-                                                                 <Button
-                                                                      as="a"
-                                                                      size="sm"
-                                                                      fontSize="sm"
-                                                                      colorScheme="facebook"
-                                                                      leftIcon={<Icon as={RiPencilLine} />}
-
-                                                                 >
-                                                                      Editar
-                                                                 </Button>
+                                                                 <div className={styles.preencher}>
+                                                                      {employee.pendentes?.length === 0 ? 'Apto' : 'Inapto'}
+                                                                 </div>
                                                             </td>
-                                                      
+                                                            <td>{employee.interno}</td>
+                                                            <td>
+                                                                 {employee.horasConcluidas}
+                                                            </td>
+
                                                        </tr>
-                                                
+
                                                   )
                                              })}
                                         </tbody>
@@ -130,8 +155,6 @@ export default function EmployeeList() {
 export const getServerSideProps = withSSRAuth(async (ctx) => {
 
      return {
-          props: {
-
-          }
+          props: {}
      }
 })

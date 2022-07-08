@@ -15,6 +15,7 @@
 
      --blue-500: #349eff;
      --blue-800: #0d508f;
+     --blue-100: #BEE3F8;
 
      --red-500: #F56565;
      --yellow-500: #d3a500;
@@ -37,6 +38,14 @@
 
 body{
      font-family: 'Montserrat', sans-serif;
+
+     &::-webkit-scrollbar{
+          width: 12px;
+          background-color: var(--bg-second);
+     }
+     &::-webkit-scrollbar-thumb{
+          background-color: rgba(0, 0, 0, 0.5);
+     }
 }
 
 .theme-light{
@@ -122,6 +131,14 @@ body.active {
           transform: scale(50);
      }
 
+     .toogle_theme{
+          .icon_toggle{
+               position: absolute;
+               left: 30px !important;
+               color: rgb(68, 68, 85) !important;
+          }
+     }
+
 }
 
 
@@ -151,4 +168,40 @@ input {
 }
 a, button{
      cursor: pointer;
+}
+button{
+     border-radius: 8px;
+}
+
+
+// CONTENT SIDEBAR RIGHT
+
+.labels{
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
+
+     input{
+          padding: 10px;
+     }
+}
+
+.buttons_sideRight{
+     button{
+          padding: 10px;
+          &:nth-child(1){
+               background-color: var(--bg-second);
+               &:hover{
+                    filter: brightness(0.9);
+               }
+          }    
+          
+          &:nth-child(2){
+               background-color: var(--red-500);
+               color: #F0F0F0;
+               &:hover{
+                    filter: brightness(0.9);
+               }
+          }    
+     }
 }

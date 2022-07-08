@@ -1,4 +1,7 @@
+import { AiOutlineFileSearch } from "react-icons/ai";
+import { FaUserTie } from "react-icons/fa";
 import { RiContactsLine, RiDashboardLine, RiGitMergeLine, RiInputMethodLine } from "react-icons/ri";
+import { BsClockHistory } from 'react-icons/bs'
 import { NavLink } from "./NavLink";
 import { NavSection } from "./NavSection";
 
@@ -11,11 +14,9 @@ export function SidebarNav(){
             <NavSection title="Geral">
                 <NavLink href="/dashboard" icon={<RiDashboardLine/>} children="Dashboard" />
                 <NavLink href="/employees" icon={<RiContactsLine/>} children="Employees" />
-            </NavSection>
-
-            <NavSection title="Automação">
-                <NavLink href="/forms" icon={<RiInputMethodLine/>} children="Formulários" />
-                <NavLink href="/automation" icon={<RiGitMergeLine/>} children="Automação" />
+                <NavLink href="/trainings" icon={<AiOutlineFileSearch/>} children="Training Available" />
+                <NavLink href="/positions" icon={<FaUserTie/>} children="Available Positions" />
+                <NavLink href="/expired" icon={<BsClockHistory/>} children="Expired Training" />
             </NavSection>
         </div>
     )

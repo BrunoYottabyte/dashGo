@@ -64,6 +64,19 @@
     padding-right: 24px;
     border-right-width: 1px;
     border-color: var(--gray-400);
+
+    .container_icon{
+        background-color: var(--bg-second);
+        border-radius: 8px;
+        width: 50px;
+        height: 20px;
+        position: relative;
+        .icon{
+            position: absolute;
+            transition: all 1s ease;
+            left: 0px;
+        }
+    }
 }
 
 // End Fragment NotificationsNav
@@ -111,5 +124,84 @@
     align-items: center;
     margin-left: auto;
     color: var(--color-50);
+    position: relative;
+    cursor: pointer;
 
+    .box_floating{
+        position: absolute;
+        z-index: 9999;
+        top: 60px;
+        right: 5px;
+        background-color: var(--bg-second);
+        
+        transition: all 0.3s ease;
+        transform: scale(0);
+        transform-origin: top right;
+
+        padding: 15px 30px;
+        box-shadow: -2px 5px 10px rgba(0,0,0,0.28);
+        border-radius: 8px 0 8px 8px;
+        div{
+            line-height: 35px;
+            cursor: pointer;
+        }
+
+        &.active{
+            transform: scale(1);
+        }
+    }
+}
+
+
+// CONTAINER LOGOUT
+
+.overlay{
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.4);
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .container{
+        width: 300px;
+        height: 150px;
+        background-color: var(--bg-second);
+        border-radius: 8px;
+        color: var(--gray-400);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+
+        button{
+            padding: 10px 20px;
+            background-color: var(--bg-main);
+            transition: filter ease 0.3s;
+            font-weight: bold;
+            filter: brightness(0.8);
+            color: rgb(150, 150, 150);
+            &:hover{
+                filter: brightness(0.35);
+            }
+            + button{
+                margin-left: 5px;
+            }
+
+            &:nth-child(2){
+                color: #FFFFFF;
+                background-color: var(--red-500);
+                filter: brightness(1);
+                &:hover{
+                    filter: brightness(0.8);
+                }
+            }
+        }
+    }
 }

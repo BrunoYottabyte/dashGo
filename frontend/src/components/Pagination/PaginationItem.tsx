@@ -16,7 +16,7 @@ export function PaginationItem({isCurrent = false, number, onPageChange}:Paginat
                 colorScheme="blue"
                 disabled
                 _disabled={{
-                    bgColor: 'gray.400',
+                    bgColor: 'blue.300',
                     cursor: 'default'
                 }}
             >
@@ -30,9 +30,10 @@ export function PaginationItem({isCurrent = false, number, onPageChange}:Paginat
             size="sm"
             fontSize="xs"
             width="4"
-            bgColor="gray.700"
+            bgColor="gray.500"
+            color={'white'}
             _hover={{
-                bg: 'gray.500'
+                bg: 'gray.600'
             }}
             onClick={() => onPageChange(number)}
         >

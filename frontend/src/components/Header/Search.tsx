@@ -6,7 +6,7 @@ export function Search (){
 
     return(
             <label className={styles.label}>
-                <input placeholder="Buscar na plataforma" />
+                <input placeholder="Not working, must be implemented..." />
                 <RiSearchLine fontSize={20} />
             </label>
     )
