@@ -18,15 +18,15 @@ import { useFetch } from "../../contexts/FetchContext";
 export default function EmployeeList() {
      const [page, setPage] = useState(1);
      const { data, isLoading, error, isFetching } = useUsers(page);
-     const {setFetch} = useFetch();
+     const { setFetch } = useFetch();
 
-     async function handlePrefetchEmployee (userId: string){
+     async function handlePrefetchEmployee(userId: string) {
           await queryClient.prefetchQuery(['employeeId', userId], () => getEmployeesId(userId), {
-               staleTime: 1000 * 60 * 10 
+               staleTime: 1000 * 60 * 10
           });
      }
 
-     async function handlePrefetchRecords (userId: string){
+     async function handlePrefetchRecords(userId: string) {
           await queryClient.prefetchQuery(['RecordsEmployeeId', userId], () => getRecordsEmployee(userId), {
                staleTime: 1000 * 60 * 10
           })
@@ -89,22 +89,31 @@ export default function EmployeeList() {
 
                                         <tbody className={styles.tbody}>
                                              {data.employees?.map(employee => {
-                                             
+                                                       
                                                   return (
-                                                       <tr key={employee.id}>   
-
-                                                            <td onMouseEnter={() => {
-                                                              
-                                                              handlePrefetchEmployee(employee?.id)
-                                                              handlePrefetchRecords(employee?.id)
-                                                              setFetch(employee?.id);
-                                                     
-                                                        }}>
-                                                                <NextLink href="/employees/info" >
+                                                       <tr key={employee.id}
+                                                            onTouchMove={() => {
+                                                                 handlePrefetchEmployee(employee?.id)
+                                                                 handlePrefetchRecords(employee?.id)
+                                                                 setFetch(employee?.id);
+                                                            }}
+                                                       
+                                                            onMouseEnter={() => {
+                                                                 handlePrefetchEmployee(employee?.id)
+                                                                 handlePrefetchRecords(employee?.id)
+                                                                 setFetch(employee?.id);
+                                                            }}
+                                                       >
                                                                  
-                                                                           Visualizar
-                                                                    
-                                                                </NextLink>
+                                                            <td 
+
+                              
+                                                            >
+                                                                 <NextLink href="/employees/info" >
+
+                                                                      Visualizar
+
+                                                                 </NextLink>
                                                             </td>
                                                             <td>
                                                                  <div className={styles.info_pessoal}>

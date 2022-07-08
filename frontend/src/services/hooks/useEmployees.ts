@@ -54,6 +54,7 @@ export function useUsers(page: number){
 
 export async function getEmployeesId(id: string): Promise<Employee>{
          const { data } = await api.get(`/funcionario/${id}`);
+         console.log(data);
          const employee = {
                    id: data.employee._id,
                    nome: data.employee.nome,
@@ -62,13 +63,14 @@ export async function getEmployeesId(id: string): Promise<Employee>{
                    sexo: data.employee.sexo,
                    interno: data.employee.funcionarioProprio,
                    treinamentos: data.employee.treinamentos,
-                   horasConcluidas: data.employee.totCargaHorFunc,
+                   horasConcluidas: data.totalCargaHoraria,
                    createdAt: new Date(data.employee.dataCadastro).toLocaleDateString('pt-BR', {
                         day: '2-digit',
                         month: 'long',
                         year: 'numeric'
                    })
               }
+              console.log(employee)
 
          return employee;
  }
@@ -82,11 +84,11 @@ export async function getEmployeesId(id: string): Promise<Employee>{
                dataVencimento: moment(record.dataVencimento).format('DD/MM/YYYY'),
                nome: record.treinamentoId.nome,
                validade: record.treinamentoId.validade,
-               cargaMinima: record.treinamentoId.cargaHorariaMin
+               cargaMinima: record.treinamentoId.cargaHorariaMin,
+               cargaHoraria: record.cargaHoraria
           }
      })
 
-     console.log(records);
 
      return records;
 }

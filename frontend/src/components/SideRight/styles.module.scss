@@ -66,3 +66,57 @@
         }
     }
  }
+
+ 
+
+ //BOX DECISION
+.overlay{
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.4);
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .container{
+        width: 300px;
+        height: 150px;
+        background-color: var(--bg-second);
+        border-radius: 8px;
+        color: var(--gray-400);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+
+        button{
+            padding: 10px 20px;
+            background-color: var(--bg-main);
+            transition: filter ease 0.3s;
+            font-weight: bold;
+            filter: brightness(0.8);
+            color: rgb(150, 150, 150);
+            &:hover{
+                filter: brightness(0.35);
+            }
+            + button{
+                margin-left: 5px;
+            }
+
+            &:nth-child(2){
+                color: #FFFFFF;
+                background-color: var(--red-500);
+                filter: brightness(1);
+                &:hover{
+                    filter: brightness(0.8);
+                }
+            }
+        }
+    }
+}

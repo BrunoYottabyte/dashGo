@@ -34,18 +34,20 @@
      margin: 0;
      box-sizing: border-box;
      transition: color 0.5s ease-in;
+
+     &::-webkit-scrollbar{
+          width: 12px !important;
+          background-color: var(--bg-second) !important;
+     }
+     &::-webkit-scrollbar-thumb{
+          background-color: rgba(0, 0, 0, 0.5) !important;
+     }
 }
 
 body{
      font-family: 'Montserrat', sans-serif;
 
-     &::-webkit-scrollbar{
-          width: 12px;
-          background-color: var(--bg-second);
-     }
-     &::-webkit-scrollbar-thumb{
-          background-color: rgba(0, 0, 0, 0.5);
-     }
+     
 }
 
 .theme-light{
@@ -78,6 +80,7 @@ body {
           left: -5vw;
           bottom: -5vw;
           transition: all 0.6s 0.6s ease;
+          overflow-y: hidden !important;
    
      }
 
@@ -120,6 +123,7 @@ body.active {
           content: "";
           transform: scale(2);
           max-width: 80vw;
+          overflow-y: hidden !important;
      }
 
      .box {
@@ -183,6 +187,10 @@ button{
 
      input{
           padding: 10px;
+
+          &:disabled{
+               opacity: 0.5;
+          }
      }
 }
 

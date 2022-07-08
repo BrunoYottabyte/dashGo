@@ -76,7 +76,7 @@ export function Header() {
                     </div>
                </div>
 
-               {boxLogout && <ContainerLogout fn={setBoxLogout} state={boxLogout} />}
+               {boxLogout && <BoxDecision fn={setBoxLogout} state={boxLogout} />}
           </header>
      )
 }
@@ -86,7 +86,7 @@ type ContainerLogoutProps = {
      state: boolean
 }
 
-const ContainerLogout = ({ fn, state }: ContainerLogoutProps) => {
+const BoxDecision = ({ fn, state }: ContainerLogoutProps) => {
      return (
           <div className={styles.overlay}>
                <div className={styles.container}>

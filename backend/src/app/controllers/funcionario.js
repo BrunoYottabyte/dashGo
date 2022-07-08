@@ -152,7 +152,6 @@ router.put('/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const dados = req.body;
-    console.log(dados);
     const response = await Funcionario.findByIdAndUpdate(id, dados);
     res.json({ error: false, response });
   } catch (err) {
