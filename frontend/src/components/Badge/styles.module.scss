@@ -1,0 +1,20 @@
+.badgeContainer{
+    padding: 0.05em 0.5em;
+    border-radius: 0.2rem;
+    color: #fff;
+    font-size: 80%;
+    width: fit-content;
+    margin: 0 auto;
+    &.able{
+        background: #4BBF73
+    }
+
+    &.unqualified{
+        background: #D9534F
+    }
+
+    &.pending{
+        background: #E5A54B
+    }
+
+}

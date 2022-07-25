@@ -10,6 +10,7 @@ const middlewareAuth = require('../middlewares/auth');
 
 router.post('/', async (req, res) => {
   try {
+    console.log(req.body);
     const funcionario = await Funcionario(req.body).save();
     res.json({
       error: false,

@@ -27,7 +27,10 @@
     flex: 1;
     background-color: var(--bg-second);
     border-radius: 8px;
+    overflow: hidden;
     overflow-x: auto !important;
+    position: block;
+    z-index: 10;
 
     .employee_data_box {
         h1 {

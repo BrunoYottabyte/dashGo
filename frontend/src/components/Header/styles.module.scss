@@ -1,39 +1,12 @@
 /** Header Component **/
 
-// Fragment Logo
-
-.logo{
-    width: 240px;
-    
-    img{
-        cursor: pointer;
-        width: 120px;
-        filter: invert(0.5) brightness(1.5);
-    }
-}
-
-@media screen and (max-width: 720px){
-    .logo{
-        img{
-            width: 80px;
-            margin-left: 16px;
-        }
-    }
-}
-
-// End Fragment Logo
-
-
-
 // Fragment Search
 .label{
     display: flex;
     flex: 1;
-
     padding: 16px 32px;
-    margin-left: 24px;
     max-width: 400px;
-    background-color: var(--bg-second);
+    background-color: var(--bg-second) !important;
     align-items: center;
     color: var(--gray-200);
     position: relative;
@@ -108,11 +81,8 @@
     margin: 0 auto;
     margin-top: 16px;
     margin-bottom: 2.5rem;
-
     display: flex;
     align-items: center;
-
-    padding: 0 var(--hDefault);
 }
 
 .icon_button{
@@ -179,6 +149,7 @@
         align-items: center;
         justify-content: center;
         gap: 25px;
+        
 
         button{
             padding: 10px 20px;
@@ -186,7 +157,8 @@
             transition: filter ease 0.3s;
             font-weight: bold;
             filter: brightness(0.8);
-            color: rgb(150, 150, 150);
+            color: var(--color-50);
+
             &:hover{
                 filter: brightness(0.35);
             }

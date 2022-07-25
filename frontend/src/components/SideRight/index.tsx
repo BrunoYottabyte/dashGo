@@ -17,18 +17,34 @@ export const SideRight = ({ body, head, state, setState, messageBox }: SideRight
     const close = (section_ref) => {
         section_ref.current.classList.remove(styles.active);
     }
+
     useEffect(() => {
-        section_ref.current.classList.add(styles.active);
-    });
+                const handleClick = (e) => {
+                    if(state){
+                            section_ref?.current?.classList.add(styles.active); 
+                            setState(false);
+                    }else{
+                        if(section_ref.current && !section_ref?.current.contains(e.target)){
+                            section_ref?.current?.classList.remove(styles.active); 
+                        }
+                    }
+                }
+
+        document.addEventListener('click', handleClick)
+
+        return () => document.removeEventListener('click', handleClick)
+                
+    })
 
     
+   
+
     return (
         <div className={styles.sideRight} ref={section_ref}>
             <div className={styles.head}>
                 <h1>{head?.title}</h1>
                 <span onClick={() => {
                     close(section_ref)
-                    setState(!state);
                 }}>{head?.close}</span>
             </div>
             <div className={styles.body}>{body && body()}</div>

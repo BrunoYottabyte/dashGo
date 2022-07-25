@@ -3,12 +3,41 @@
 /* Index */
 
 .box{
-    min-width: 240px;
+    max-width: 240px !important;
+    min-height: 100vh;
     margin-right: 24px;
+    position: fixed;
+    transition: all 0.4s 1s ease-in !important;
+    background-color: var(--bg-second);
 }
 
 /* End Index */
 
+// Fragment Logo
+
+.logo{
+    width: 240px;
+    margin-top: 16px;
+    display: grid;
+    place-items: center;
+
+    img{
+        cursor: pointer;
+        width: 120px;
+        filter: invert(0.5) brightness(1.5);
+    }
+}
+
+@media screen and (max-width: 720px){
+    .logo{
+        img{
+            width: 80px;
+            margin-left: 16px;
+        }
+    }
+}
+
+// End Fragment Logo
 
 /* Fragment NavLink*/
     
@@ -33,7 +62,7 @@
     font-size: var(--small);
     color: var(--gray-400);
     font-weight: bold;
-    
+    padding: 0 24px;
 }
 
 .group_link{
@@ -41,7 +70,7 @@
     flex-direction: column;
     margin-top: 32px;
     gap: 16px 0;
-
+    padding: 0 24px;
 }
 
 

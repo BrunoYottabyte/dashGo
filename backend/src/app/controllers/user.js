@@ -21,7 +21,7 @@ const createRefreshToken = (email) => {
 const generateJwtAndRefreshToken = async(email, payload = {}) =>{
   const token = jwt.sign(payload, authConfig.secret, {
     subject: email,
-    expiresIn: 15 // 15 min
+    expiresIn: 15 * 60 // 15 min
   })
 
   const refreshToken = createRefreshToken(email);
@@ -40,6 +40,8 @@ const generateTokenPassword = () => {
 };
 
 router.post('/', async (req, res) => {
+  console.log('cheguei antes do async')
+
   const { email, username, fullname, password } = req.body;
   const administratorsDefault = ['bsiqueira@geogas.com.br', 'lvalle@geogas.com.br'];
   try {
@@ -54,7 +56,6 @@ router.post('/', async (req, res) => {
     if (await User.findOne({ email })) {
       return res.status(401).json({ error: true, message: 'User already exists' });
     }
-
     async function createUser(){
       const user = {
         fullname,
@@ -80,11 +81,13 @@ router.post('/', async (req, res) => {
     }
     const hash = ac.join('');
 
+    let statusEnvio = [];
+
     try{
       mailer.sendMail(
         {
           to: email,
-          from: 'bsiqueira@geogas.com.br',
+          from: 'systemgeogas@outlook.com.br',
           subject: 'Check your email :)',
           template: 'verifyEmail',
           context: {
@@ -105,29 +108,39 @@ router.post('/', async (req, res) => {
             },
           ],
         },
-        (err) => {
-            if(err){
-  
-               return res.json({ error: true, message: 'Erro on verify email, try again' });
-            }
-   
-           Promise.resolve(original);
+        (err, info) => {
+          if(err){
+            statusEnvio.forEach(request => request.onFailed(err)); 
+          }else{
+            statusEnvio.forEach(request => request.onSuccess());
+          }  
+    
         }
      
       );
 
       async function continueCreate() {
           const user = await createUser();
-          res.status(200).json({
+           res.status(200).json({
           error: false,
           user,
           });
       }
 
-      return new Promise(continueCreate);
+      return new Promise((resolve, reject) => {
+        statusEnvio.push({
+          onSuccess(){
+            console.log('passei no onsucess')
+            resolve(continueCreate());
+          },
+          onFailed(err){
+            console.log('passei no onfailed')
+            return res.json({error: true, code: 'urgencia.remetente.destinatario', message: 'Erro ao criar conta, contate ao administrador do sistema.'})
+          }
+        })
+      });
      
     }catch(err){
-      console.log('catch')
       return res.json({error: true});
     }
 
@@ -225,42 +238,47 @@ router.post('/authenticate', async (req, res) => {
       codeVerifyEmail: hash,
     });
 
-    mailer.sendMail(
-      {
-        from: 'bsiqueira@geogas.com.br',
-        to: email,
-        subject: 'Check your email :)',
-        template: 'verifyEmail',
-        attachments: [
-          {
-            filename: 'verifyMail.png',
-            path: path.resolve(
-              __dirname,
-              '..',
-              '..',
-              'modules/assets/verifyMail.png'
-            ),
-            cid: 'mail',
+    const enviarEmail = () => {
+      return mailer.sendMail(
+        {
+          from: '"Verificação de email" <systemgeogas@outlook.com.br>',
+          to: email,
+          subject: 'Check your email :)',
+          template: 'verifyEmail',
+          attachments: [
+            {
+              filename: 'verifyMail.png',
+              path: path.resolve(
+                __dirname,
+                '..',
+                '..',
+                'modules/assets/verifyMail.png'
+              ),
+              cid: 'mail',
+            },
+          ],
+          context: {
+            name: user.fullname.split(' ')[0],
+            hash,
           },
-        ],
-        context: {
-          name: user.name,
-          hash,
         },
-      },
-      (err, info) => {
-        console.log(info)
-        if (err){
-        console.log(err);
-          console.log('não consegui entregar');
-          return;
+        (err, info) => {
+          if (err){
+            console.log('não consegui entregar');
+            return res.json({ error: true, message: 'Erro on verify email, try again' });
+          }else{
+            return res.json({error: false, message: 'Email not verified'})
+          }
+            // return res.json({ error: true, message: 'Erro on verify email, try again' });
         }
-          // return res.json({ error: true, message: 'Erro on verify email, try again' });
-      }
-    );
+      );
+    }
 
-     res.json({ error: true, message: 'Email not verified' });
-     return;
+    return new Promise(resolve => {
+      resolve(enviarEmail())
+    })
+
+     
   }
 
   if (!(await bcrypt.compare(password, user.password)))

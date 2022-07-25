@@ -18,8 +18,11 @@ export function Sidebar() {
             let viewport = breakpoints?.sm || breakpoints?.md
             setIsDrawerSidebar(viewport);
         }, [breakpoints])
+
+
  
         if(isDrawerSidebar){
+    
             return(
                 <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
                     <DrawerOverlay >
@@ -34,11 +37,16 @@ export function Sidebar() {
                 </Drawer>
             )
         }
-    
             return (
-                <div className={styles.box}>
-                    <SidebarNav />
-                </div>
+   
+                    <div className={`${styles.box}`}>
+
+                            <div className="sidebar">
+                                <SidebarNav />
+                            </div>
+                
+                    </div>
+            
             )    
         
 

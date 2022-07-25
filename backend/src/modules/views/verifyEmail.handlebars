@@ -19,7 +19,7 @@
       border-radius: 25px 25px 0 0; user-select: none; } .inferior{
       border-radius: 0 0 25px 25px; background: #1e1f20; } .image{ width: 50%; }
       img{ user-select: none; width: 45%; margin-right: 50px; position:
-      absolute; object-fit: contain; left: 10px; } .hash{ letter-spacing: 5px;
+      absolute; object-fit: contain; left: 10px; -webkit-user-drag: none !important; -moz-user-select: none !important; } .hash{ letter-spacing: 5px;
       font-size: 4rem; }
     </style>
 
@@ -28,7 +28,7 @@
     <div class='container-email'>
       <div class='container-superior'>
         <div class='image'>
-          <img src='cid:mail' height='200' />
+          <img draggable="false" dropzone="false" role="img" src='cid:mail' height='200' />
         </div>
 
         <div>

@@ -54,7 +54,7 @@ export function Header() {
                          />
                     </div>
                )}
-               <Logo />
+               {/* <Logo /> */}
                {isWideVersion && <Search />}
 
                <div className={styles.group_notifications_profile} >

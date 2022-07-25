@@ -1,18 +1,14 @@
-.box_employees {
+.box_content{
     width: 100%;
-    max-width: 1480px;
-    padding: 0 var(--hDefault);
-    display: flex;
-
 }
 
 .box_table {
     flex: 1;
-    background-color: var(--bg-second);
     padding: 32px;
     border-radius: 8px;
     overflow-x: auto !important;
     margin-bottom: 1rem;
+    overflow-y: hidden;
     .header {
         display: flex;
         align-items: center;
@@ -38,11 +34,7 @@
             outline: 0;
         }
         
-       
-
-        th:nth-child(1){
-            // padding: 0 24px;
-        }
+    
         th{
             text-align: center;
             width: 50px;

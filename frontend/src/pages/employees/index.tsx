@@ -3,167 +3,174 @@ import Head from "next/head";
 import { RiAddLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
+import Table from "../../components/Table";
+import  Badge  from "../../components/Badge";
 import NextLink from "next/link";
 import { Pagination } from "../../components/Pagination";
 import { useState } from "react";
 import { withSSRAuth } from "../../utils/withSSRAuth";
-import styles from './styles.module.scss';
-import { getEmployeesId, getRecordsEmployee, useUsers } from "../../services/hooks/useEmployees";
+import styles from "./styles.module.scss";
+import {
+  getEmployeesId,
+  getRecordsEmployee,
+  useUsers,
+} from "../../services/hooks/useEmployees";
 import { queryClient } from "../../services/queryClient";
-import { api } from "../../services/api";
+import { api, setupClientApi } from "../../services/api";
 import { useRouter } from "next/router";
 import { useFetch } from "../../contexts/FetchContext";
-
+import Layout from "../../components/Layout";
 
 export default function EmployeeList() {
-     const [page, setPage] = useState(1);
-     const { data, isLoading, error, isFetching } = useUsers(page);
-     const { setFetch } = useFetch();
+  const [page, setPage] = useState(1);
+  const { data, isLoading, error, isFetching } = useUsers(page);
+  const { setFetch } = useFetch();
 
-     async function handlePrefetchEmployee(userId: string) {
-          await queryClient.prefetchQuery(['employeeId', userId], () => getEmployeesId(userId), {
-               staleTime: 1000 * 60 * 10
-          });
-     }
+  async function handlePrefetchEmployee(userId: string) {
+    await queryClient.prefetchQuery(
+      ["employeeId", userId],
+      () => getEmployeesId(userId),
+      {
+        staleTime: 1000 * 60 * 10,
+      }
+    );
+  }
 
-     async function handlePrefetchRecords(userId: string) {
-          await queryClient.prefetchQuery(['RecordsEmployeeId', userId], () => getRecordsEmployee(userId), {
-               staleTime: 1000 * 60 * 10
-          })
-     }
-     return (
+  async function handlePrefetchRecords(userId: string) {
+    await queryClient.prefetchQuery(
+      ["RecordsEmployeeId", userId],
+      () => getRecordsEmployee(userId),
+      {
+        staleTime: 1000 * 60 * 10,
+      }
+    );
+  }
 
+  const employees = data?.employees.map(employee => {
+    return {
+      ...employee,
+      pendentes: employee.pendentes?.length,
+      status: employee.pendentes?.length === 0
+        ? <Badge type="employee" status='able' />
+        : <Badge type="employee" status='unqualified' />,
+    }
+  })
 
-          < >
-               <Head>
-                    <title>Employees | Geogas</title>
-               </Head>
-               <Header />
+  return (
+    <>
+      <Head>
+        <title>Employees | Geogas</title>
+      </Head>
 
-               <div className={styles.box_employees}>
-                    <Sidebar />
+      <Layout>
+          <div className={styles.box_content}>
+            <div className={`${styles.box_table} box`}>
+              <div className={styles.header}>
+                <h1>
+                  Employees{" "}
+                  {!isLoading && isFetching && <Spinner ml="2" size="sm" />}
+                </h1>
+                <NextLink href="/employees/create" passHref>
+                  <Button
+                    as="a"
+                    size="sm"
+                    fontSize="sm"
+                    colorScheme="facebook"
+                    leftIcon={<Icon fontSize="15" as={RiAddLine} />}
+                  >
+                    Criar novo
+                  </Button>
+                </NextLink>
+              </div>
 
-                    <div className={`${styles.box_table} box`}>
-                         <div className={styles.header}>
-                              <h1>Employees {
-                                   !isLoading && isFetching && (
-                                        <Spinner ml="2" size="sm" />
-                                   )
-                              }</h1>
+              {isLoading ? (
+                <div className="flex-h-center">
+                  <Spinner />
+                </div>
+              ) : error ? (
+                <div className="flex-h-center">
+                  <p>Falha ao obter dados do usuário</p>
+                </div>
+              ) : (
+                <>
+                  <Table arr={employees} handlePrefetchEmployee={handlePrefetchEmployee} handlePrefetchRecords={handlePrefetchRecords} />
+                  {/* <table>
+                    <thead>
+                      <tr>
+                        <th>Informações</th>
+                        <th>Funcionário</th>
+                        <th>Treinamentos pendentes</th>
+                        <th>Status</th>
+                        <th>Interno</th>
+                        <th>Horas concluídas</th>
+                      </tr>
+                    </thead>
 
-                              <NextLink href="/employees/create" passHref>
-                                   <Button
-                                        as="a"
-                                        size="sm"
-                                        fontSize="sm"
-                                        colorScheme="facebook"
-                                        leftIcon={<Icon fontSize="15" as={RiAddLine} />}
-                                   >
-                                        Criar novo
-                                   </Button>
+                    <tbody className={styles.tbody}>
+                      {data.employees?.map((employee) => {
+                
+                        return (
+                          <tr
+                            key={employee.id}
+                            onTouchMove={() => {
+                              handlePrefetchEmployee(employee?.id);
+                              handlePrefetchRecords(employee?.id);
+                              setFetch(employee?.id);
+                            }}
+                            onMouseEnter={() => {
+                              handlePrefetchEmployee(employee?.id);
+                              handlePrefetchRecords(employee?.id);
+                              setFetch(employee?.id);
+                            }}
+                          >
+                            <td>
+                              <NextLink href="/employees/info">
+                                Visualizar
                               </NextLink>
-                         </div>
-
-
-                         {isLoading ? (
-                              <div className="flex-h-center">
-                                   <Spinner />
+                            </td>
+                            <td>
+                              <div className={styles.info_pessoal}>
+                                <a>{employee.nome}</a>
+                                <small>{employee.cargo}</small>
                               </div>
-                         ) : error ? (
-                              <div className="flex-h-center">
-                                   <p>Falha ao obter dados do usuário</p>
+                            </td>
+                            <td>
+                              <div className={styles.preencher}>
+                                {employee.pendentes?.length}
                               </div>
-                         ) : (
-                              <>
-                                   <table>
-                                        <thead>
-                                             <tr>
-                                                  <th>Informações</th>
-                                                  <th>Funcionário</th>
-                                                  <th>Treinamentos pendentes</th>
-                                                  <th>Status</th>
-                                                  <th>Interno</th>
-                                                  <th>Horas concluídas</th>
-                                             </tr>
-                                        </thead>
+                            </td>
+                            <td>
+                              <div className={styles.preencher} style={{alignItems: 'center'}}>
+                                {employee.pendentes?.length === 0
+                                  ? <Badge type="employee" status='able' />
+                                  : <Badge type="employee" status='unqualified' />}
+                              </div>
+                            </td>
+                            <td>{employee.interno}</td>
+                            <td>{employee.horasConcluidas}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table> */}
 
-                                        <tbody className={styles.tbody}>
-                                             {data.employees?.map(employee => {
-                                                       
-                                                  return (
-                                                       <tr key={employee.id}
-                                                            onTouchMove={() => {
-                                                                 handlePrefetchEmployee(employee?.id)
-                                                                 handlePrefetchRecords(employee?.id)
-                                                                 setFetch(employee?.id);
-                                                            }}
-                                                       
-                                                            onMouseEnter={() => {
-                                                                 handlePrefetchEmployee(employee?.id)
-                                                                 handlePrefetchRecords(employee?.id)
-                                                                 setFetch(employee?.id);
-                                                            }}
-                                                       >
-                                                                 
-                                                            <td 
-
-                              
-                                                            >
-                                                                 <NextLink href="/employees/info" >
-
-                                                                      Visualizar
-
-                                                                 </NextLink>
-                                                            </td>
-                                                            <td>
-                                                                 <div className={styles.info_pessoal}>
-                                                                      <a>
-                                                                           {employee.nome}
-                                                                      </a>
-                                                                      <small>{employee.cargo}</small>
-                                                                 </div>
-
-                                                            </td>
-                                                            <td>
-                                                                 <div className={styles.preencher}>
-                                                                      {employee.pendentes?.length}
-                                                                 </div>
-                                                            </td>
-                                                            <td>
-                                                                 <div className={styles.preencher}>
-                                                                      {employee.pendentes?.length === 0 ? 'Apto' : 'Inapto'}
-                                                                 </div>
-                                                            </td>
-                                                            <td>{employee.interno}</td>
-                                                            <td>
-                                                                 {employee.horasConcluidas}
-                                                            </td>
-
-                                                       </tr>
-
-                                                  )
-                                             })}
-                                        </tbody>
-                                   </table>
-
-                                   <Pagination
-                                        totalCountOfRegisters={data.totalCount}
-                                        currentPage={page}
-                                        onPageChange={setPage}
-                                   />
-                              </>
-                         )
-                         }
-
-                    </div>
-               </div>
-          </>
-     )
+                  <Pagination
+                    totalCountOfRegisters={data.totalCount}
+                    currentPage={page}
+                    onPageChange={setPage}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+      </Layout>
+    </>
+  );
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
 
-     return {
-          props: {}
-     }
-})
+  return {
+    props: {},
+  };
+});

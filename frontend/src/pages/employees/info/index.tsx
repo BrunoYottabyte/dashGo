@@ -15,6 +15,7 @@ import {  SideRight } from "../../../components/SideRight";
 import { api } from "../../../services/api";
 import { getEmployeesId, getRecordsEmployee } from "../../../services/hooks/useEmployees";
 import { useQuery } from "react-query";
+import Layout from "../../../components/Layout";
 
 
 
@@ -66,7 +67,7 @@ export default function InfoEmployee() {
                               <input
                                    className="input_update"
                                    placeholder="Treinamento"
-                                   value={name}
+                                   value={name || ''}
                                    onChange={(e) => setName(e.target.value)}
                               />
                          </div>
@@ -74,7 +75,7 @@ export default function InfoEmployee() {
                               <label>Gender</label>
                               <select
                                    className="input_update"
-                                   value={gender}
+                                   value={gender || ''}
                                    onChange={(e) => setGender(e.target.value)}
                               >
                                    <option value="">Choose</option>
@@ -90,7 +91,7 @@ export default function InfoEmployee() {
                                    readOnly
                                    className="input_update disable"
                                    placeholder="Treinamento"
-                                   value={occupation}
+                                   value={occupation || ''}
                                    onChange={(e) => setOccupation(e.target.value)}
                               />
                          </div >
@@ -98,7 +99,7 @@ export default function InfoEmployee() {
                               <label>Internal</label>
                               <select
                                    className="input_update"
-                                   value={internal}
+                                   value={internal || ''}
                                    onChange={(e) => setInternal(e.target.value)}
                               >
                                    <option value="Sim">Sim</option>
@@ -114,7 +115,7 @@ export default function InfoEmployee() {
                                    readOnly
                                    className="input_update disable"
                                    placeholder="Workload"
-                                   value={totalWorkload}
+                                   value={totalWorkload || ''}
                                    onChange={(e) => setTotalWorkload(e.target.value)}
                               />
                          </div>
@@ -125,14 +126,14 @@ export default function InfoEmployee() {
                                    readOnly
                                    className="input_update disable"
                                    placeholder="Treinamento"
-                                   value={date}
+                                   value={date || ''}
                                    onChange={(e) => setDate(e.target.value)}
                               />
                          </div>
                     </div>
-                    <div className="buttons_sideRight">
+                    <div>
                          <button
-                              className="btn"
+                           
                               onClick={
                                    () => {
                                         handleUpdate();
@@ -142,11 +143,11 @@ export default function InfoEmployee() {
                               Update
                          </button>
                          <button
-                              className="btn"
+                           
                               onClick={
                                    handleDelete
                               }>
-                         >
+                         
                               Delete
                          </button>
                     </div>
@@ -156,39 +157,51 @@ export default function InfoEmployee() {
 
      useEffect(() => {
 
-          let [employee] = queryClient.getQueriesData(['employeeId', stateFetch]);
-          let records = queryClient.getQueriesData(['RecordsEmployeeId', stateFetch]);
+          const getData = async() => {
+               let [employee] =  await queryClient.getQueriesData(['employeeId', stateFetch]);
+               let records = await queryClient.getQueriesData(['RecordsEmployeeId', stateFetch]);
 
-          if (employee) {
-               setEmployee(employee[1]);
-               setRecords(records[0][1]);
+               if (employee) {
+                    setEmployee(employee[1]);
+                    setRecords(records[0][1]);
 
 
-               setName(employee[1]?.nome);
-               setDate(employee[1]?.createdAt)
-               setGender(employee[1]?.sexo);
-               setInternal(employee[1]?.interno);
-               setOccupation(employee[1]?.cargo);
-               setTotalWorkload(employee[1]?.horasConcluidas)
-               return;
+                    setName(employee[1]?.nome);
+                    setDate(employee[1]?.createdAt)
+                    setGender(employee[1]?.sexo);
+                    setInternal(employee[1]?.interno);
+                    setOccupation(employee[1]?.cargo);
+                    setTotalWorkload(employee[1]?.horasConcluidas)
+                    return;   
+               }else{
+                    console.log('employee', employee)
+                    return new Promise(resolve => {
+                         try{
+                              resolve(getData())
+                         }catch{
+                              Router.back();
+                         }
+                    })
+               }
+
+               
+
           }
-               Router.back();
+
+          getData();
+
+          
 
      }, [])
 
     
 
      return (
-
-
-          < >
-               <Head>
+          <Layout>
+                 <Head>
                     <title>Employees | Geogas</title>
                </Head>
-               <Header />
-
                <div className={styles.box_employees}>
-                    <Sidebar />
 
                     <section className={`${styles.box_content} box`}>
 
@@ -199,16 +212,16 @@ export default function InfoEmployee() {
 
                                         <label>
                                              Name:
-                                             <input disabled type="text" placeholder="N a m e" value={employee?.nome} />
+                                             <input disabled type="text" placeholder="N a m e" value={employee?.nome || ''} />
                                         </label>
 
                                         <label>
                                              Occupation:
-                                             <input disabled type="text" placeholder="O c c u p a t i o n " value={employee?.cargo}></input>
+                                             <input disabled type="text" placeholder="O c c u p a t i o n " value={employee?.cargo || ''}></input>
                                         </label>
                                         <label>
                                              Internal:
-                                             <input disabled type="text" placeholder="I n t e r n a l" value={employee?.interno}></input>
+                                             <input disabled type="text" placeholder="I n t e r n a l" value={employee?.interno || ''}></input>
                                         </label>
 
 
@@ -290,8 +303,8 @@ export default function InfoEmployee() {
 
                     </section>
                </div>
-               {sideRight && <SideRight body={() => body(employee)} head={head} state={sideRight} setState={setSideRight} />}
-          </>
+             <SideRight body={() => body(employee)} head={head} state={sideRight} setState={setSideRight} />
+          </Layout>
      )
 }
 

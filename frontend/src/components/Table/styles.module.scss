@@ -1,0 +1,15 @@
+.tableContainer{
+   >span{
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        gap: 15px;
+        input{
+            background-color: var(--bg-main);
+            border-radius: 5px;
+            box-shadow: var(--box-shadow-input);
+            padding: 5px 15px;
+        }
+        margin-bottom: 1.5rem;
+   }
+}

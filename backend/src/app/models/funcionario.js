@@ -20,7 +20,7 @@ const funcionarioSchema = new mongoose.Schema({
     type: String,
     enum: ['Sim', 'Não'],
     default: 'Sim',
-    required: true,
+    required: false,
   },
   sexo: {
     type: String,
@@ -33,7 +33,7 @@ const funcionarioSchema = new mongoose.Schema({
       ref: 'Treinamento',
     },
   ],
-  dataCadastro: {
+  created_at: {
     type: Date,
     default: new Date(),
   },

@@ -19,7 +19,6 @@ router.post('/', async (req, res) => {
 
 router.get('/', async(req, res) => {
   try{
-    
     const allFunction = await Funcao.find({}).populate({
       path: 'treinamentosObrig',
       select: 'nome'

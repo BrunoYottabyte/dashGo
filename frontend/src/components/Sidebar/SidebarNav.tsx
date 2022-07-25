@@ -6,11 +6,13 @@ import { NavLink } from "./NavLink";
 import { NavSection } from "./NavSection";
 
 import styles from './styles.module.scss';
+import { Logo } from "./Logo";
 
 export function SidebarNav(){
     return(
 
         <div className={styles.sidebarNav}>
+            <Logo />
             <NavSection title="Geral">
                 <NavLink href="/dashboard" icon={<RiDashboardLine/>} children="Dashboard" />
                 <NavLink href="/employees" icon={<RiContactsLine/>} children="Employees" />
