@@ -3,7 +3,9 @@ import { createContext, ReactNode, useContext, useState } from "react";
 
 type FetchContextData = {
     setFetch: (id: string) => void;  
+
     stateFetch?: string;
+
 }
 
  const FetchContext = createContext({} as FetchContextData);
@@ -14,6 +16,7 @@ interface FetchProviderProps {
 
 export function FetchProvider({children}: FetchProviderProps){
     const [stateFetch, setStateFetch] = useState("");
+
 
     const setFetch = (id: string) => {
         setStateFetch(id)

@@ -1,11 +1,11 @@
 import React from 'react'
 
-const GlobalFilter = ({filter, setFilter}) => {
+const GlobalFilter = ({value, setValue}) => {
   return (
     <span>
         Search: {' '}
-        <input value={filter || ''} 
-            onChange={e => setFilter(e.target.value)}
+        <input value={value || ''} 
+            onChange={e => setValue(e.target.value)}
         />
     </span>
   )

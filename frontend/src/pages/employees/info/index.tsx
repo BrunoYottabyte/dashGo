@@ -156,10 +156,8 @@ export default function InfoEmployee() {
      };
 
      useEffect(() => {
-
-          const getData = async() => {
-               let [employee] =  await queryClient.getQueriesData(['employeeId', stateFetch]);
-               let records = await queryClient.getQueriesData(['RecordsEmployeeId', stateFetch]);
+               let [employee] =   queryClient.getQueriesData(['employeeId', stateFetch]);
+               let records =  queryClient.getQueriesData(['RecordsEmployeeId', stateFetch]);
 
                if (employee) {
                     setEmployee(employee[1]);
@@ -173,24 +171,8 @@ export default function InfoEmployee() {
                     setOccupation(employee[1]?.cargo);
                     setTotalWorkload(employee[1]?.horasConcluidas)
                     return;   
-               }else{
-                    console.log('employee', employee)
-                    return new Promise(resolve => {
-                         try{
-                              resolve(getData())
-                         }catch{
-                              Router.back();
-                         }
-                    })
                }
-
-               
-
-          }
-
-          getData();
-
-          
+                              Router.back();
 
      }, [])
 

@@ -115,6 +115,25 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/search/:search', async(req,res) => {
+  console.log(req.params.search)
+  try{
+    const search = await Funcionario.find({
+      $or:[
+        {
+          nome: {$regex: req.params.search, $options: "i"}
+        }
+      ]
+    })
+  
+    return res.json({error: false, search})
+  }catch(err){
+    return res.json({error: true, message: err.message});
+  }
+
+})
+
+
 router.get('/:id', async (req, res) => {
   const id = req.params.id
   try {
